@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_dashboard">
+
+    <fragment
+        android:id="@+id/nav_dashboard"
+        android:name="com.campussync.app.fragments.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/nav_timetable"
+        android:name="com.campussync.app.fragments.TimetableFragment"
+        android:label="Timetable"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/nav_marks"
+        android:name="com.campussync.app.fragments.MarksFragment"
+        android:label="Marks"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/nav_budget"
+        android:name="com.campussync.app.fragments.BudgetFragment"
+        android:label="Budget"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/nav_resources"
+        android:name="com.campussync.app.fragments.ResourcesFragment"
+        android:label="Resources"
+        tools:layout="@layout/fragment_placeholder" />
+
+</navigation>

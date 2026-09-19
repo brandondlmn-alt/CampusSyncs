@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+/captures
+.externalNativeBuild
+.cxx
+
+# Firebase configuration file
+app/google-services.json
+
+# Keystore files (IMPORTANT for final Play Store submission later)
+*.jks
+*.keystore
