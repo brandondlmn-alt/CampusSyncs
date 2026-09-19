@@ -1,6 +1,7 @@
 package com.campussync.app.data
 
 import com.campussync.app.models.User
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -48,6 +49,53 @@ class AuthRepository {
             } else {
                 Result.failure(Exception("Login failed: User null"))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Fetches the current user profile from Firestore.
+     */
+    suspend fun getCurrentUserProfile(): Result<User?> {
+        return try {
+            val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
+            val snapshot = db.collection("users").document(uid).get().await()
+            val user = snapshot.toObject(User::class.java)
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Updates the user profile in Firestore.
+     */
+    suspend fun updateUserProfile(user: User): Result<Unit> {
+        return try {
+            val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
+            db.collection("users").document(uid).set(user).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Changes the user's password with re-verification.
+     */
+    suspend fun changePassword(currentPassword: String, newPassword: String): Result<Unit> {
+        return try {
+            val user = auth.currentUser ?: throw Exception("No user logged in")
+            val email = user.email ?: throw Exception("User email not found")
+            
+            // Re-authenticate
+            val credential = EmailAuthProvider.getCredential(email, currentPassword)
+            user.reauthenticate(credential).await()
+            
+            // Update password
+            user.updatePassword(newPassword).await()
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

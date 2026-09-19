@@ -13,5 +13,6 @@ data class User(
     var course: String = "",
     var yearOfStudy: String = "",
     var language: String = "English",
+    var notificationsEnabled: Boolean = true,
     var createdAt: Long = System.currentTimeMillis()
 )

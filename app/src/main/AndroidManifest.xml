@@ -37,6 +37,16 @@
             android:name=".activities.MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false"
+            android:label="Settings" />
+
+        <activity
+            android:name=".activities.ModulesActivity"
+            android:exported="false"
+            android:label="Manage Modules" />
+
     </application>
 
 </manifest>
