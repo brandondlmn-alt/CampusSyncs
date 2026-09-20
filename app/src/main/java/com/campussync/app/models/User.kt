@@ -1,18 +1,21 @@
 package com.campussync.app.models
 
 /**
- * User data class representing a student in the system.
- * Contains an empty constructor required for Firebase Firestore deserialization.
+ * Updated User model to capture Rosebank International academic details and preferences.
  */
 data class User(
     var uid: String = "",
     var email: String = "",
     var firstName: String = "",
     var lastName: String = "",
-    var institution: String = "",
+    var isRosebankStudent: Boolean = true,
+    var campusLocation: String = "",
     var course: String = "",
-    var yearOfStudy: String = "",
-    var language: String = "English",
+    var yearOfStudy: Int = 0,
+    var currentSemester: Int = 0,
+    var enrolledModules: List<Map<String, String>> = emptyList(),
+    var language: String = "en",
     var notificationsEnabled: Boolean = true,
-    var createdAt: Long = System.currentTimeMillis()
+    var createdAt: Long = 0L,
+    var updatedAt: Long = 0L
 )

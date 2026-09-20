@@ -6,20 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.campussync.app.adapters.MarkAdapter
 import com.campussync.app.data.*
 import com.campussync.app.databinding.FragmentDashboardBinding
 import com.campussync.app.models.MarkListItem
 import com.campussync.app.models.TimetableEntry
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Dashboard Fragment that aggregates data from all features.
- * Shows welcome message, next class, academic average, and budget summary.
+ * Updated with lifecycle-aware coroutines to prevent crashes during navigation.
  */
 class DashboardFragment : Fragment() {
 
@@ -30,9 +32,11 @@ class DashboardFragment : Fragment() {
     private val timetableRepo = TimetableRepository()
     private val markRepo = MarkRepository()
     private val budgetRepo = BudgetRepository()
+    private val geminiRepo = GeminiRepository()
     
     private val markAdapter = MarkAdapter(onEditClick = {}, onDeleteClick = {})
     private val TAG = "DashboardFragment"
+    private var currentAverage = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,32 +51,43 @@ class DashboardFragment : Fragment() {
         
         binding.rvRecentMarks.adapter = markAdapter
         loadDashboardData()
+        setupAiAssistant()
     }
 
     private fun loadDashboardData() {
-        binding.progressBar.visibility = View.VISIBLE
-        
-        lifecycleScope.launch {
-            // 1. Load User Profile for Welcome Message
-            authRepo.getCurrentUserProfile().onSuccess { user ->
-                binding.tvWelcome.text = "Hi, ${user?.firstName ?: "Student"}!"
-            }
+        // Use viewLifecycleOwner to automatically cancel when the tab is switched
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                
+                binding.progressBar.visibility = View.VISIBLE
 
-            // 2. Aggregate real-time data from all modules
-            combine(
-                timetableRepo.getTimetableEntries(),
-                markRepo.getMarkEntries(),
-                budgetRepo.getCurrentMonthExpenses()
-            ) { timetable, marks, expenses ->
-                DashboardData(timetable, marks, expenses)
-            }.collect { data ->
-                binding.progressBar.visibility = View.GONE
-                updateUI(data)
+                // 1. Load User Profile
+                authRepo.getCurrentUserProfile().onSuccess { user ->
+                    if (_binding != null) {
+                        binding.tvWelcome.text = "Hi, ${user?.firstName ?: "Student"}!"
+                    }
+                }
+
+                // 2. Aggregate real-time data
+                combine(
+                    timetableRepo.getTimetableEntries(),
+                    markRepo.getMarkEntries(),
+                    budgetRepo.getCurrentMonthExpenses()
+                ) { timetable, marks, expenses ->
+                    DashboardData(timetable, marks, expenses)
+                }.collect { data ->
+                    if (_binding != null) {
+                        binding.progressBar.visibility = View.GONE
+                        updateUI(data)
+                    }
+                }
             }
         }
     }
 
     private fun updateUI(data: DashboardData) {
+        if (_binding == null) return
+
         // --- Next Class ---
         val nextClass = findNextClass(data.timetable)
         if (nextClass != null) {
@@ -84,43 +99,73 @@ class DashboardFragment : Fragment() {
         }
 
         // --- Academic Average ---
-        val average = markRepo.calculateWeightedAverage(data.marks)
-        binding.tvCurrentAvg.text = String.format(Locale.getDefault(), "%.1f%%", average)
+        currentAverage = markRepo.calculateWeightedAverage(data.marks)
+        binding.tvCurrentAvg.text = String.format(Locale.getDefault(), "%.1f%%", currentAverage)
 
         // --- Budget Remaining ---
-        // Note: Budget settings are fetched once or we could observe them. 
-        // For Dashboard simplicity, we'll use the cached/fetched settings if available.
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             budgetRepo.getBudgetSettings().onSuccess { settings ->
-                val allowance = settings?.monthlyAllowance ?: 0.0
-                val spent = data.expenses.sumOf { it.amount }
-                binding.tvBudgetRemaining.text = String.format(Locale.getDefault(), "R %.0f", (allowance - spent))
+                if (_binding != null) {
+                    val allowance = settings?.monthlyAllowance ?: 0.0
+                    val spent = data.expenses.sumOf { it.amount }
+                    binding.tvBudgetRemaining.text = String.format(Locale.getDefault(), "R %.0f", (allowance - spent))
+                }
             }
         }
 
         // --- Recent Assessments ---
         val recentMarks = data.marks
-            .sortedByDescending { it.id } // Firestore IDs are roughly chronological, or add a timestamp
+            .sortedByDescending { it.id }
             .take(3)
             .map { MarkListItem.Item(it) }
         markAdapter.submitList(recentMarks)
     }
 
+    private fun setupAiAssistant() {
+        binding.btnGetAiTip.setOnClickListener {
+            val prompt = if (currentAverage > 0) {
+                "I am a student with a current weighted average of ${String.format("%.1f", currentAverage)}%. " +
+                "Give me one short, highly practical study tip. Keep it under 30 words."
+            } else {
+                "I am a student. Give me one short study tip. Keep it under 30 words."
+            }
+
+            setAiLoading(true)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = geminiRepo.generateContent(prompt)
+                if (_binding != null) {
+                    setAiLoading(false)
+                    result.fold(
+                        onSuccess = { tip -> binding.tvAiResponse.text = tip.trim() },
+                        onFailure = { e -> 
+                            binding.tvAiResponse.text = "Try again later"
+                            Log.e(TAG, "AI Error", e)
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setAiLoading(isLoading: Boolean) {
+        if (_binding == null) return
+        binding.aiProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.btnGetAiTip.isEnabled = !isLoading
+        if (isLoading) binding.tvAiResponse.text = "Thinking..."
+    }
+
     private fun findNextClass(entries: List<TimetableEntry>): TimetableEntry? {
         if (entries.isEmpty()) return null
-        
         val now = Calendar.getInstance()
         val days = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
         val currentDay = days[now.get(Calendar.DAY_OF_WEEK) - 1]
         val currentTime = String.format("%02d:%02d", now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
 
-        // Classes for today that haven't started yet
         return entries
             .filter { it.dayOfWeek == currentDay && it.startTime >= currentTime }
             .minByOrNull { it.startTime }
     }
 
-    // Helper class to group data for the Flow combine operator
     data class DashboardData(
         val timetable: List<TimetableEntry>,
         val marks: List<com.campussync.app.models.MarkEntry>,

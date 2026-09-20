@@ -90,9 +90,9 @@ class SettingsActivity : AppCompatActivity() {
     private fun populateFields(user: User) {
         binding.etFirstName.setText(user.firstName)
         binding.etLastName.setText(user.lastName)
-        binding.etInstitution.setText(user.institution)
+        binding.etInstitution.setText(user.campusLocation)
         binding.etCourse.setText(user.course)
-        binding.etYear.setText(user.yearOfStudy)
+        binding.etYear.setText(user.yearOfStudy.toString())
         binding.actvLanguage.setText(user.language, false)
         binding.switchNotifications.isChecked = user.notificationsEnabled
     }
@@ -115,11 +115,12 @@ class SettingsActivity : AppCompatActivity() {
         val updatedUser = currentUser?.copy(
             firstName = firstName,
             lastName = lastName,
-            institution = institution,
+            campusLocation = institution,
             course = course,
-            yearOfStudy = year,
+            yearOfStudy = year.toIntOrNull() ?: 0,
             language = language,
-            notificationsEnabled = notificationsEnabled
+            notificationsEnabled = notificationsEnabled,
+            updatedAt = System.currentTimeMillis()
         ) ?: return
 
         setLoading(true)

@@ -2,6 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_marks"
+        android:icon="@drawable/ic_marks"
+        android:title="Marks"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_resources"
+        android:icon="@drawable/ic_resources"
+        android:title="Resources"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="Settings"

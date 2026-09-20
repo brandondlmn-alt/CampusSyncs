@@ -9,15 +9,11 @@
         android:icon="@drawable/ic_timetable"
         android:title="Timetable" />
     <item
-        android:id="@+id/nav_marks"
-        android:icon="@drawable/ic_marks"
-        android:title="Marks" />
-    <item
         android:id="@+id/nav_budget"
         android:icon="@drawable/ic_budget"
         android:title="Budget" />
     <item
-        android:id="@+id/nav_resources"
-        android:icon="@drawable/ic_resources"
-        android:title="Resources" />
+        android:id="@+id/nav_chatbot"
+        android:icon="@drawable/ic_assistant"
+        android:title="AI Assistant" />
 </menu>

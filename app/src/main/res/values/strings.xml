@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">CampusSync</string>
+
+    <!-- Registration Step Labels -->
+    <string name="step_account">Account</string>
+    <string name="step_institution">Institution</string>
+    <string name="step_review">Review</string>
+
+    <!-- Registration Hints -->
+    <string name="hint_email">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_campus">Campus Location</string>
+    <string name="hint_course">Course</string>
+    <string name="hint_year">Year of Study</string>
+    <string name="hint_semester">Current Semester</string>
 </resources>

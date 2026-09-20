@@ -2,7 +2,6 @@ package com.campussync.app.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -14,21 +13,17 @@ import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Main Activity of the application.
- * Hosts the Navigation Component with BottomNavigationView.
- * Handles user authentication check and logout.
+ * Handles the 4-item bottom navigation and the top-menu navigation for Marks and Resources.
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val auth = FirebaseAuth.getInstance()
-    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // 1. Check if user is authenticated; if not, redirect to Login
         if (auth.currentUser == null) {
-            Log.d(TAG, "No user logged in, redirecting to LoginActivity")
             navigateToLogin()
             return
         }
@@ -36,14 +31,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
-        // 2. Setup Toolbar
         setSupportActionBar(binding.toolbar)
-        Log.d(TAG, "MainActivity UI initialized")
 
-        // 3. Setup Navigation Component with BottomNavigationView
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+
+        // Setup bottom navigation (Dashboard, Timetable, Budget, Assistant)
         binding.bottomNav.setupWithNavController(navController)
     }
 
@@ -53,23 +47,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
         return when (item.itemId) {
+            R.id.action_marks -> {
+                navController.navigate(R.id.nav_marks)
+                true
+            }
+            R.id.action_resources -> {
+                navController.navigate(R.id.nav_resources)
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
             R.id.action_logout -> {
-                performLogout()
+                auth.signOut()
+                navigateToLogin()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun performLogout() {
-        Log.d(TAG, "User logging out")
-        auth.signOut()
-        navigateToLogin()
     }
 
     private fun navigateToLogin() {
