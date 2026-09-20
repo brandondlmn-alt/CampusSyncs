@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -48,6 +50,18 @@
             android:name=".activities.ModulesActivity"
             android:exported="false"
             android:label="Manage Modules" />
+
+        <activity
+            android:name=".activities.ScannerActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/scan_timetable_title" />
+
+        <activity
+            android:name=".activities.ScannerAssessmentActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/scanner_assessment_title" />
 
     </application>
 

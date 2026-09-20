@@ -2,7 +2,10 @@ package com.campussync.app.data
 
 import android.util.Log
 import com.campussync.app.BuildConfig
+import com.campussync.app.models.ScannedAssessment
+import com.campussync.app.models.ScannedTimetableEntry
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -13,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
 
 /**
  * Advanced Repository for Gemini AI.
- * Prioritizes Gemini 2.5 Flash models with automatic fallback to 2.0.
+ * Handles content generation, timetable extraction, and assessment extraction.
  */
 class GeminiRepository {
 
@@ -28,62 +31,189 @@ class GeminiRepository {
     private val mediaType = "application/json; charset=utf-8".toMediaType()
 
     suspend fun generateContent(prompt: String): Result<String> {
-        // 1. Sanitize the API key
-        val rawKey = try { BuildConfig.GEMINI_API_KEY } catch (e: Exception) { "" }
-        val apiKey = rawKey.replace("\"", "").replace("'", "").trim()
+        val apiKey = getApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
 
-        if (apiKey.isBlank()) {
-            return Result.failure(Exception("API Key missing. Add to local.properties and Rebuild."))
-        }
-
-        // 2. Prioritized list of current Gemini Flash models
-        val models = listOf(
-            "gemini-3-flash-preview",        // Latest and most capable Flash model
-            "gemini-3.1-flash-lite",         // Stable, cost-effective 3.x model
-            "gemini-2.5-flash",              // Stable 2.5 model
-            "gemini-2.5-flash-lite"          // Smallest, most cost-effective 2.5 model
-        )
-
+        val models = getModelList()
         for (model in models) {
-            Log.d(TAG, "Attempting AI generation with model: $model")
-            val result = makeApiCall(model, apiKey, prompt)
-
-            if (result.isSuccess) {
-                Log.i(TAG, "Successfully generated content using: $model")
-                return result
-            }
-
-            val error = result.exceptionOrNull()?.message ?: ""
-
-            // If the error is 404 (Model Not Found), we proceed to the next model in the list
-            if (error.contains("404")) {
-                Log.w(TAG, "Model $model returned 404 (Not Found). Trying fallback...")
-                continue
-            } else {
-                // If it's a different error (like 403 Invalid Key or 429 Rate Limit),
-                // we stop and report it immediately.
-                return result
-            }
+            val result = makeApiCall(model, apiKey, prompt, null, null)
+            if (result.isSuccess) return result
+            if (result.exceptionOrNull()?.message?.contains("404") != true) return result
         }
-
-        return Result.failure(Exception("None of the specified Gemini models are currently available for this API key."))
+        return Result.failure(Exception("All models failed"))
     }
 
-    private suspend fun makeApiCall(model: String, apiKey: String, prompt: String): Result<String> = suspendCoroutine { continuation ->
-        val requestMap = mapOf(
-            "contents" to listOf(
-                mapOf("parts" to listOf(mapOf("text" to prompt)))
-            )
-        )
-        val body = gson.toJson(requestMap).toRequestBody(mediaType)
+    /**
+     * Extracts structured timetable data from a base64 encoded image.
+     */
+    suspend fun extractTimetableFromImage(
+        imageBase64: String,
+        mimeType: String
+    ): Result<List<ScannedTimetableEntry>> {
+        val apiKey = getApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
 
-        // All current Gemini models use the v1beta endpoint
+        val prompt = """
+            You are an OCR and data extraction assistant. Analyze the uploaded timetable 
+            image and extract all class entries.
+
+            Return ONLY a valid JSON array with no additional text, markdown, or code 
+            fences. The response must be parseable by Gson.
+
+            Each entry must have exactly these fields:
+            {
+              "moduleCode": "string - e.g., OPSC6312",
+              "moduleName": "string - e.g., Open Source Coding",
+              "dayOfWeek": "string - Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday",
+              "startTime": "string in 24-hour format - e.g., 09:00",
+              "endTime": "string in 24-hour format - e.g., 10:30",
+              "venue": "string - room or building name"
+            }
+
+            Rules:
+            - If a field is not visible, use "N/A"
+            - Do NOT include duplicate entries
+            - Ensure times are in 24-hour HH:MM format
+            - If no timetable is visible, return an empty array []
+
+            Image:
+        """.trimIndent()
+
+        val models = getModelList()
+        for (model in models) {
+            val result = makeApiCall(model, apiKey, prompt, imageBase64, mimeType)
+            if (result.isSuccess) {
+                return try {
+                    val json = cleanJsonResponse(result.getOrThrow())
+                    val type = object : TypeToken<List<ScannedTimetableEntry>>() {}.type
+                    Result.success(gson.fromJson(json, type))
+                } catch (e: Exception) { Result.failure(e) }
+            }
+            if (result.exceptionOrNull()?.message?.contains("404") != true) return Result.failure(result.exceptionOrNull()!!)
+        }
+        return Result.failure(Exception("Extraction failed"))
+    }
+
+    /**
+     * Extracts assessment deadlines from a Programme Assessment Schedule (PAS) image.
+     */
+    suspend fun extractAssessmentsFromImage(
+        imageBase64: String,
+        mimeType: String,
+        programmeCodeFilter: String
+    ): Result<List<ScannedAssessment>> {
+        val apiKey = getApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
+
+        val filterInstruction = if (programmeCodeFilter.isNotBlank()) {
+            """
+            IMPORTANT FILTER: Only extract rows where the "Programme Code" column 
+            matches EXACTLY: "$programmeCodeFilter"
+
+            Do NOT include rows from other programme codes. For example, if the filter 
+            is "DIS3", only extract rows with Programme Code "DIS3" and skip all rows 
+            with "DIS1" or "DIS2".
+            """.trimIndent()
+        } else {
+            ""
+        }
+
+        val prompt = """
+            You are an OCR and data extraction assistant for a university assessment 
+            schedule (called a PAS - Programme Assessment Schedule).
+
+            Analyze the uploaded image and extract ALL assessment entries (assignments, 
+            tests, exams, portfolios of evidence, practical assessments).
+
+            $filterInstruction
+
+            Return ONLY a valid JSON array with no additional text, markdown, or code 
+            fences. The response must be parseable by Gson.
+
+            Each entry must have exactly these fields:
+            {
+              "programmeCode": "string - the exact Programme Code from the row (e.g., 'DIS3')",
+              "moduleCode": "string - e.g., OPSC6312",
+              "moduleName": "string - e.g., Open Source Coding",
+              "assessmentType": "string - e.g., Test 1 Sitting 1, Assignment 2, Portfolio of Evidence (POE), Practical Assessment 1",
+              "submissionMethod": "string - either 'Online Submission' or 'Campus Sitting'",
+              "requiresTurnitin": true or false,
+              "dueDate": "string in ISO format YYYY-MM-DD - convert dates like '15-Sep-26' to '2026-09-15'",
+              "dueTime": "string in 24-hour HH:MM format - e.g., '23:50'"
+            }
+
+            Rules:
+            - Extract EVERY row from the table, even if the date column seems short
+            - Convert dates: '15-Sep-26' -> '2026-09-15'; '30-Nov-26' -> '2026-11-30'
+            - Preserve assessment types exactly as shown (e.g., 'Test 1 Sitting 1')
+            - If a field is missing, use "N/A"
+            - If the image is not a PAS/assessment schedule, return an empty array []
+            - Do NOT skip matching rows
+
+            Image:
+        """.trimIndent()
+
+        val models = getModelList()
+        for (model in models) {
+            val result = makeApiCall(model, apiKey, prompt, imageBase64, mimeType)
+            if (result.isSuccess) {
+                return try {
+                    val json = cleanJsonResponse(result.getOrThrow())
+                    val type = object : TypeToken<List<ScannedAssessment>>() {}.type
+                    Result.success(gson.fromJson(json, type))
+                } catch (e: Exception) { Result.failure(e) }
+            }
+            if (result.exceptionOrNull()?.message?.contains("404") != true) return Result.failure(result.exceptionOrNull()!!)
+        }
+        return Result.failure(Exception("Assessment extraction failed"))
+    }
+
+    private fun getApiKey() = BuildConfig.GEMINI_API_KEY.replace("\"", "").replace("'", "").trim()
+
+    private fun getModelList() = listOf(
+        "gemini-3-flash-preview",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite"
+    )
+
+    private fun cleanJsonResponse(raw: String): String {
+        return raw.trim().removeSurrounding("```json", "```").trim()
+    }
+
+    private suspend fun makeApiCall(
+        model: String,
+        apiKey: String,
+        prompt: String,
+        imageBase64: String?,
+        mimeType: String?
+    ): Result<String> = suspendCoroutine { continuation ->
+        val parts = mutableListOf<Map<String, Any>>(
+            mapOf("text" to prompt)
+        )
+        if (imageBase64 != null && mimeType != null) {
+            parts.add(mapOf(
+                "inlineData" to mapOf(
+                    "mimeType" to mimeType,
+                    "data" to imageBase64
+                )
+            ))
+        }
+
+        val requestMap = mutableMapOf<String, Any>(
+            "contents" to listOf(mapOf("parts" to parts))
+        )
+        if (imageBase64 != null) {
+            requestMap["generationConfig"] = mapOf("responseMimeType" to "application/json")
+        }
+
+        val body = gson.toJson(requestMap).toRequestBody(mediaType)
         val url = "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"
 
         val request = Request.Builder()
             .url(url)
             .addHeader("Content-Type", "application/json")
-            .addHeader("x-goog-api-key", apiKey) // Use header instead of query param
+            .addHeader("x-goog-api-key", apiKey)
             .post(body)
             .build()
 
@@ -91,19 +221,14 @@ class GeminiRepository {
             override fun onFailure(call: Call, e: IOException) {
                 continuation.resume(Result.failure(e))
             }
-
             override fun onResponse(call: Call, response: Response) {
                 response.use {
-                    val responseBody = response.body?.string() ?: ""
                     if (!response.isSuccessful) {
-                        continuation.resume(Result.failure(Exception("HTTP ${response.code}: $responseBody")))
-                        return
-                    }
-
-                    try {
+                        continuation.resume(Result.failure(Exception("Error ${response.code}")))
+                    } else try {
+                        val responseBody = response.body?.string() ?: ""
                         val geminiResponse = gson.fromJson(responseBody, GeminiResponse::class.java)
                         val text = geminiResponse.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
-
                         if (text != null) {
                             continuation.resume(Result.success(text))
                         } else {

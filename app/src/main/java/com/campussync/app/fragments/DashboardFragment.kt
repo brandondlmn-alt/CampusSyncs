@@ -12,16 +12,20 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.campussync.app.adapters.MarkAdapter
 import com.campussync.app.data.*
 import com.campussync.app.databinding.FragmentDashboardBinding
+import com.campussync.app.models.Assessment
 import com.campussync.app.models.MarkListItem
 import com.campussync.app.models.TimetableEntry
-import com.google.android.material.snackbar.Snackbar
+import com.campussync.app.utils.DateUtils
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Dashboard Fragment that aggregates data from all features.
- * Updated with lifecycle-aware coroutines to prevent crashes during navigation.
+ * Updated to handle upcoming assessments without requiring a composite index.
  */
 class DashboardFragment : Fragment() {
 
@@ -33,6 +37,7 @@ class DashboardFragment : Fragment() {
     private val markRepo = MarkRepository()
     private val budgetRepo = BudgetRepository()
     private val geminiRepo = GeminiRepository()
+    private val db = FirebaseFirestore.getInstance()
     
     private val markAdapter = MarkAdapter(onEditClick = {}, onDeleteClick = {})
     private val TAG = "DashboardFragment"
@@ -52,10 +57,10 @@ class DashboardFragment : Fragment() {
         binding.rvRecentMarks.adapter = markAdapter
         loadDashboardData()
         setupAiAssistant()
+        observeUpcomingAssessments()
     }
 
     private fun loadDashboardData() {
-        // Use viewLifecycleOwner to automatically cancel when the tab is switched
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 
@@ -119,6 +124,44 @@ class DashboardFragment : Fragment() {
             .take(3)
             .map { MarkListItem.Item(it) }
         markAdapter.submitList(recentMarks)
+    }
+
+    private fun observeUpcomingAssessments() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+        // Simplified query to avoid index requirement
+        db.collection("assessments")
+            .whereEqualTo("studentId", uid)
+            .addSnapshotListener { snapshot, _ ->
+                if (_binding == null) return@addSnapshotListener
+                val allAssessments = snapshot?.toObjects(Assessment::class.java) ?: emptyList()
+                
+                // Filter and sort client-side
+                val upcoming = allAssessments
+                    .filter { !it.completed && it.dueDate >= today }
+                    .sortedBy { it.dueDate }
+                    .take(3)
+                
+                updateDeadlinesUI(upcoming)
+            }
+    }
+
+    private fun updateDeadlinesUI(assessments: List<Assessment>) {
+        if (_binding == null) return
+        
+        if (assessments.isEmpty()) {
+            binding.tvDeadlinesSummary.text = "No upcoming deadlines 🎉"
+            return
+        }
+
+        val sb = StringBuilder()
+        assessments.forEach { assessment ->
+            val countdown = DateUtils.getCountdown(assessment.dueDate)
+            sb.append("${assessment.moduleCode}: ${assessment.assessmentType}\n")
+            sb.append("Due: ${DateUtils.formatForDisplay(assessment.dueDate, assessment.dueTime)} ($countdown)\n\n")
+        }
+        binding.tvDeadlinesSummary.text = sb.toString().trim()
     }
 
     private fun setupAiAssistant() {

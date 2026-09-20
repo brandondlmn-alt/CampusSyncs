@@ -1,16 +1,85 @@
 <resources>
     <string name="app_name">CampusSync</string>
 
-    <!-- Registration Step Labels -->
+    <!-- Navigation -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_timetable">Timetable</string>
+    <string name="title_budget">Budget</string>
+    <string name="title_assistant">AI Assistant</string>
+    <string name="title_marks">Marks</string>
+    <string name="title_resources">Resources</string>
+    <string name="title_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Registration -->
     <string name="step_account">Account</string>
     <string name="step_institution">Institution</string>
     <string name="step_review">Review</string>
-
-    <!-- Registration Hints -->
+    <string name="btn_next">Next</string>
+    <string name="btn_register">Register</string>
     <string name="hint_email">Email Address</string>
     <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_campus">Campus Location</string>
     <string name="hint_course">Course</string>
     <string name="hint_year">Year of Study</string>
     <string name="hint_semester">Current Semester</string>
+    <string name="is_rosebank_student">Are you a Rosebank International student?</string>
+    <string name="optimization_note">CampusSync is currently optimised for Rosebank International students.</string>
+    <string name="manual_modules_note">You can add modules later in the Timetable screen.</string>
+    <string name="review_header">Review Your Details</string>
+    <string name="review_email_label">Email: %1$s</string>
+    <string name="review_campus_label">Campus: %1$s</string>
+    <string name="review_course_label">Course: %1$s</string>
+    <string name="review_year_label">Year: %1$s</string>
+    <string name="review_semester_label">Semester: %1$s</string>
+    <string name="review_modules_header">Your modules for Year %1$d, Semester %2$d:</string>
+    <string name="review_modules_note">These modules will be added to your timetable.</string>
+
+    <!-- AI Timetable Scanner -->
+    <string name="scan_timetable_title">Scan Timetable</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="scanning_message">Analyzing your timetable...</string>
+    <string name="scanning_upload_title">Upload Timetable Photo</string>
+    <string name="scanning_upload_desc">We will extract the modules, times, and venues for you to review.</string>
+    <string name="review_entries_title">Review Entries</string>
+    <string name="review_entries_header">%1$d entries found. Tap to edit before saving.</string>
+    <string name="review_save_note">Only entries with a module code will be saved.</string>
+    <string name="save_all">Save All to Timetable</string>
+    <string name="rescan">Rescan</string>
+
+    <!-- AI Assessment Scanner -->
+    <string name="assessments_title">Assessments</string>
+    <string name="scan_pas">Scan PAS</string>
+    <string name="scanner_assessment_title">Scan Assessment Schedule</string>
+    <string name="review_assessments_title">Review Assessments</string>
+    <string name="review_assessments_header">%1$d assessments found. Tap to edit before saving.</string>
+    <string name="save_all_assessments">Save All Assessments</string>
+    <string name="add_assessment_manually">Add Assessment Manually</string>
+    <string name="no_assessments">No assessments yet. Scan your PAS or add manually.</string>
+    <string name="filter_all">All</string>
+    <string name="filter_upcoming">Upcoming</string>
+    <string name="filter_completed">Completed</string>
+    <string name="filter_past">Past</string>
+    <string name="requires_turnitin">Requires Turnitin</string>
+    <string name="scanning_upload_title_pas">Upload your PAS Photo</string>
+    <string name="scanning_upload_desc_pas">We will extract the assessment deadlines for you.</string>
+
+    <!-- Scanner Item Hints -->
+    <string name="hint_module_code">Module Code</string>
+    <string name="hint_module_name">Module Name</string>
+    <string name="hint_day_of_week">Day of Week</string>
+    <string name="hint_start_time">Start Time</string>
+    <string name="hint_end_time">End Time</string>
+    <string name="hint_venue">Venue</string>
+    <string name="desc_delete_entry">Delete entry</string>
+
+    <!-- Errors and Success -->
+    <string name="error_image_too_large">Image too large. Choose a smaller image.</string>
+    <string name="error_no_entries">No timetable entries detected. Try a clearer image.</string>
+    <string name="error_network">Check your internet connection.</string>
+    <string name="error_rate_limit">Too many requests. Wait a minute and try again.</string>
+    <string name="error_auth">AI authentication failed. Contact support.</string>
+    <string name="error_generic">Could not process the image. Try again.</string>
+    <string name="entries_saved">%1$d entries saved successfully</string>
 </resources>

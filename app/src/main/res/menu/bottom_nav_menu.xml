@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_timetable"
         android:title="Timetable" />
     <item
+        android:id="@+id/nav_assessments"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Assessments" />
+    <item
         android:id="@+id/nav_budget"
         android:icon="@drawable/ic_budget"
         android:title="Budget" />

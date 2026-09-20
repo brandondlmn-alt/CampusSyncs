@@ -18,10 +18,10 @@
         tools:layout="@layout/fragment_timetable" />
 
     <fragment
-        android:id="@+id/nav_marks"
-        android:name="com.campussync.app.fragments.MarksFragment"
-        android:label="Marks"
-        tools:layout="@layout/fragment_marks" />
+        android:id="@+id/nav_assessments"
+        android:name="com.campussync.app.fragments.AssessmentsFragment"
+        android:label="Assessments"
+        tools:layout="@layout/fragment_assessments" />
 
     <fragment
         android:id="@+id/nav_budget"
@@ -30,15 +30,21 @@
         tools:layout="@layout/fragment_budget" />
 
     <fragment
-        android:id="@+id/nav_resources"
-        android:name="com.campussync.app.fragments.ResourcesFragment"
-        android:label="Resources"
-        tools:layout="@layout/fragment_resources" />
-
-    <fragment
         android:id="@+id/nav_chatbot"
         android:name="com.campussync.app.fragments.ChatbotFragment"
         android:label="AI Assistant"
         tools:layout="@layout/fragment_chatbot" />
+
+    <fragment
+        android:id="@+id/nav_marks"
+        android:name="com.campussync.app.fragments.MarksFragment"
+        android:label="Marks"
+        tools:layout="@layout/fragment_marks" />
+
+    <fragment
+        android:id="@+id/nav_resources"
+        android:name="com.campussync.app.fragments.ResourcesFragment"
+        android:label="Resources"
+        tools:layout="@layout/fragment_resources" />
 
 </navigation>

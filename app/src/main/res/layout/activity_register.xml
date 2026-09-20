@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/abc_ic_ab_back_material"
-        app:title="Create Account" />
+        app:title="@string/step_account" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/registrationProgress"
@@ -42,7 +42,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Account Details"
+                    android:text="@string/step_account"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                     android:layout_marginBottom="24dp"/>
 
@@ -51,7 +51,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email Address"
+                    android:hint="@string/hint_email"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
@@ -65,7 +65,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password (min 6 chars)"
+                    android:hint="@string/hint_password"
                     app:passwordToggleEnabled="true"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
@@ -80,7 +80,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
+                    android:hint="@string/hint_confirm_password"
                     app:passwordToggleEnabled="true"
                     android:layout_marginBottom="32dp">
                     <com.google.android.material.textfield.TextInputEditText
@@ -111,7 +111,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Academic Profile"
+                    android:text="@string/step_institution"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                     android:layout_marginBottom="16dp"/>
 
@@ -120,14 +120,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Are you a Rosebank International student?"
+                    android:text="@string/is_rosebank_student"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/tvOptimizationNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CampusSync is currently optimised for Rosebank International students."
+                    android:text="@string/optimization_note"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"/>
@@ -142,7 +142,7 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Campus Location"
+                        android:hint="@string/hint_campus"
                         android:layout_marginBottom="16dp">
                         <AutoCompleteTextView
                             android:id="@+id/actvCampus"
@@ -155,7 +155,7 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course"
+                        android:hint="@string/hint_course"
                         android:layout_marginBottom="16dp">
                         <AutoCompleteTextView
                             android:id="@+id/actvCourse"
@@ -168,7 +168,7 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Year of Study"
+                        android:hint="@string/hint_year"
                         android:layout_marginBottom="16dp">
                         <AutoCompleteTextView
                             android:id="@+id/actvYear"
@@ -181,7 +181,7 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Current Semester"
+                        android:hint="@string/hint_semester"
                         android:layout_marginBottom="24dp">
                         <AutoCompleteTextView
                             android:id="@+id/actvSemester"
@@ -196,7 +196,7 @@
                     android:id="@+id/tvManualNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="You can add modules later in the Timetable screen."
+                    android:text="@string/manual_modules_note"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_marginBottom="24dp"
                     android:visibility="gone"/>
@@ -222,7 +222,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Review Your Details"
+                    android:text="@string/review_header"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                     android:layout_marginBottom="16dp"/>
 
@@ -236,11 +236,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="16dp">
-                        <TextView android:id="@+id/tvReviewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCampus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Campus: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCourse" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Course: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Year: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewSemester" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Semester: "/>
+                        <TextView android:id="@+id/tvReviewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewCampus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewCourse" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewSemester" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -248,7 +248,6 @@
                     android:id="@+id/tvReviewModulesHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your Modules:"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_marginBottom="8dp"/>
 
@@ -263,7 +262,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="These modules will be added to your timetable."
+                    android:text="@string/review_modules_note"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:layout_marginBottom="32dp"/>
 

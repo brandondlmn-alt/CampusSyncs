@@ -1,5 +1,6 @@
 package com.campussync.app.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.campussync.app.R
+import com.campussync.app.activities.ScannerActivity
 import com.campussync.app.adapters.TimetableAdapter
 import com.campussync.app.data.ModuleRepository
 import com.campussync.app.data.TimetableRepository
@@ -27,7 +29,7 @@ import java.util.Calendar
 
 /**
  * Fragment to display and manage the student's timetable.
- * Refined to use defined Modules for consistency.
+ * Supports manual entry and AI scanning via ScannerActivity.
  */
 class TimetableFragment : Fragment() {
 
@@ -50,11 +52,22 @@ class TimetableFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
         setupRecyclerView()
         observeTimetable()
 
         binding.fabAddEntry.setOnClickListener {
             checkModulesAndShowDialog(null)
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.inflateMenu(R.menu.timetable_menu)
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.action_scan) {
+                startActivity(Intent(requireContext(), ScannerActivity::class.java))
+                true
+            } else false
         }
     }
 
