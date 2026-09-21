@@ -28,8 +28,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 /**
- * Fragment to display and manage the student's timetable.
- * Supports manual entry and AI scanning via ScannerActivity.
+ * Fragment for viewing and managing the student's weekly class schedule.
  */
 class TimetableFragment : Fragment() {
 
@@ -105,17 +104,12 @@ class TimetableFragment : Fragment() {
         val dialogBinding = DialogAddTimetableEntryBinding.inflate(layoutInflater)
         val isEdit = entry != null
 
-        // Setup Module Dropdown
         val moduleCodes = modules.map { it.code }.toTypedArray()
-        val moduleAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, moduleCodes)
-        dialogBinding.actvModuleCode.setAdapter(moduleAdapter)
+        dialogBinding.actvModuleCode.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, moduleCodes))
 
-        // Setup Day Dropdown
         val days = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-        val dayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, days)
-        dialogBinding.actvDay.setAdapter(dayAdapter)
+        dialogBinding.actvDay.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, days))
 
-        // Setup Time Pickers
         dialogBinding.etStartTime.setOnClickListener {
             showTimePicker { time -> dialogBinding.etStartTime.setText(time) }
         }
@@ -133,7 +127,6 @@ class TimetableFragment : Fragment() {
             dialogBinding.etVenue.setText(entry?.venue)
         }
 
-        // Auto-fill module name when code is selected
         dialogBinding.actvModuleCode.setOnItemClickListener { _, _, position, _ ->
             val selectedModule = modules.find { it.code == moduleCodes[position] }
             dialogBinding.etModuleName.setText(selectedModule?.name)

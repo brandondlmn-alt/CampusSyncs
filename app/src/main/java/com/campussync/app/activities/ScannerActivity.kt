@@ -20,25 +20,17 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 /**
- * Activity for scanning a timetable image using AI.
- * Steps: 1. Pick Image, 2. Review and Save.
+ * Activity for extracting timetable data from an image using AI vision.
  */
 class ScannerActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityScannerBinding
-    private val geminiRepo = GeminiRepository()
+    private val repo = GeminiRepository()
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    
-    private var scannedAdapter: ScannedEntryAdapter? = null
-    private val TAG = "ScannerActivity"
+    private var adapter: ScannedEntryAdapter? = null
 
-    private val pickImageLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            startExtraction(uri)
-        }
+    private val picker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { startExtraction(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,121 +42,87 @@ class ScannerActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Step 1 UI
         setSupportActionBar(binding.toolbarPick)
         binding.toolbarPick.setNavigationOnClickListener { finish() }
-        binding.btnChooseGallery.setOnClickListener {
-            pickImageLauncher.launch("image/*")
-        }
-
-        // Step 2 UI
-        binding.toolbarReview.setNavigationOnClickListener { 
-            binding.viewFlipper.displayedChild = 0 
-        }
-        binding.btnRescan.setOnClickListener { 
-            binding.viewFlipper.displayedChild = 0 
-            binding.tvError.visibility = View.GONE
-        }
-        binding.btnSaveAll.setOnClickListener { saveAllEntries() }
+        binding.btnChooseGallery.setOnClickListener { picker.launch("image/*") }
+        binding.btnRescan.setOnClickListener { binding.viewFlipper.displayedChild = 0 }
+        binding.btnSaveAll.setOnClickListener { saveAll() }
     }
 
     private fun startExtraction(uri: Uri) {
         setLoading(true)
-        binding.tvError.visibility = View.GONE
-
         lifecycleScope.launch {
             try {
-                val inputStream = contentResolver.openInputStream(uri)
-                val bytes = inputStream?.readBytes() ?: throw Exception("Could not read image")
-                inputStream.close()
+                val bytes = contentResolver.openInputStream(uri)?.readBytes() ?: throw Exception("Read failed")
+                if (bytes.size > 7 * 1024 * 1024) throw Exception("Image too large")
 
-                if (bytes.size > 7 * 1024 * 1024) {
-                    throw Exception("Image too large. Max 7MB.")
-                }
-
-                val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
-
-                val result = geminiRepo.extractTimetableFromImage(base64, mimeType)
+                val result = repo.extractTimetableFromImage(
+                    Base64.encodeToString(bytes, Base64.NO_WRAP),
+                    contentResolver.getType(uri) ?: "image/jpeg"
+                )
 
                 result.fold(
                     onSuccess = { entries ->
-                        setLoading(false)
-                        if (entries.isEmpty()) {
-                            showError("No timetable entries detected. Try a clearer image.")
-                        } else {
-                            showReview(entries)
-                        }
+                        if (entries.isEmpty()) showError("No entries found")
+                        else showReview(entries)
                     },
-                    onFailure = { e ->
-                        setLoading(false)
-                        showError(e.message ?: "Failed to process image")
-                    }
+                    onFailure = { e -> showError(e.message ?: "Error") }
                 )
             } catch (e: Exception) {
-                setLoading(false)
                 showError(e.message ?: "An error occurred")
             }
+            setLoading(false)
         }
     }
 
     private fun showReview(entries: List<ScannedTimetableEntry>) {
         binding.viewFlipper.displayedChild = 1
-        binding.tvReviewHeader.text = "${entries.size} entries found. Tap to edit before saving."
-        
-        scannedAdapter = ScannedEntryAdapter(entries.toMutableList())
-        binding.rvScannedEntries.apply {
-            layoutManager = LinearLayoutManager(this@ScannerActivity)
-            adapter = scannedAdapter
-        }
+        binding.tvReviewHeader.text = "${entries.size} entries found."
+        adapter = ScannedEntryAdapter(entries.toMutableList())
+
+        binding.rvScannedEntries.layoutManager = LinearLayoutManager(this)
+        binding.rvScannedEntries.adapter = adapter
     }
 
-    private fun saveAllEntries() {
-        val entries = scannedAdapter?.getEntries() ?: return
-        val validEntries = entries.filter { it.moduleCode.isNotBlank() && it.moduleCode != "N/A" }
+    private fun saveAll() {
+        val valid = adapter?.getEntries()
+            ?.filter { it.moduleCode.isNotBlank() && it.moduleCode != "N/A" } ?: emptyList()
 
-        if (validEntries.isEmpty()) {
-            Toast.makeText(this, "No valid entries to save.", Toast.LENGTH_SHORT).show()
+        if (valid.isEmpty()) {
+            Toast.makeText(this, "No valid entries", Toast.LENGTH_SHORT).show()
             return
         }
 
         val uid = auth.currentUser?.uid ?: return
         val batch = db.batch()
 
-        validEntries.forEach { scanned ->
-            val docRef = db.collection("timetable").document()
-            val entry = TimetableEntry(
-                id = docRef.id,
+        valid.forEach { entry ->
+            val doc = db.collection("timetable").document()
+            batch.set(doc, TimetableEntry(
+                id = doc.id,
                 studentId = uid,
-                moduleCode = scanned.moduleCode,
-                moduleName = scanned.moduleName,
-                dayOfWeek = scanned.dayOfWeek,
-                startTime = scanned.startTime,
-                endTime = scanned.endTime,
-                venue = scanned.venue
-            )
-            batch.set(docRef, entry)
+                moduleCode = entry.moduleCode,
+                moduleName = entry.moduleName,
+                dayOfWeek = entry.dayOfWeek,
+                startTime = entry.startTime,
+                endTime = entry.endTime,
+                venue = entry.venue
+            ))
         }
 
-        binding.btnSaveAll.isEnabled = false
         batch.commit().addOnSuccessListener {
-            Toast.makeText(this, "${validEntries.size} entries saved to your timetable", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
             finish()
-        }.addOnFailureListener { e ->
-            binding.btnSaveAll.isEnabled = true
-            Toast.makeText(this, "Failed to save: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun setLoading(isLoading: Boolean) {
-        binding.layoutPick.visibility = if (isLoading) View.GONE else View.VISIBLE
-        binding.layoutScanning.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.btnChooseGallery.isEnabled = !isLoading
+    private fun setLoading(load: Boolean) {
+        binding.layoutPick.visibility = if (load) View.GONE else View.VISIBLE
+        binding.layoutScanning.visibility = if (load) View.VISIBLE else View.GONE
     }
 
-    private fun showError(message: String) {
-        binding.tvError.text = message
+    private fun showError(m: String) {
+        binding.tvError.text = m
         binding.tvError.visibility = View.VISIBLE
-        Log.e(TAG, message)
     }
 }

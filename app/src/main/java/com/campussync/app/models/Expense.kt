@@ -1,7 +1,7 @@
 package com.campussync.app.models
 
 /**
- * Data class representing a single expense.
+ * Data class representing a financial expense entry.
  */
 data class Expense(
     var id: String = "",

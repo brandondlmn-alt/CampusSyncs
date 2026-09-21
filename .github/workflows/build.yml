@@ -21,22 +21,32 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Verify Project Structure (Debug)
+      run: |
+        ls -R app/src/main/java/com/campussync/app/utils/
+        ls -R app/src/test/java/com/campussync/app/
+
     - name: Create local.properties
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > local.properties
         echo "sdk.dir=$ANDROID_SDK_ROOT" >> local.properties
 
     - name: Decode google-services.json
-      run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > app/google-services.json
+      run: |
+        if [ -n "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" ]; then
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > app/google-services.json
+        else
+          echo "Warning: GOOGLE_SERVICES_JSON_BASE64 is missing"
+        fi
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     - name: Run unit tests
-      run: ./gradlew test
+      run: ./gradlew :app:testDebugUnitTest --no-daemon
 
     - name: Build debug APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4

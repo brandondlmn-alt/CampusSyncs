@@ -1,8 +1,7 @@
 package com.campussync.app.models
 
 /**
- * Data class representing an academic mark/grade entry.
- * Contains a no-arg constructor required for Firebase Firestore deserialization.
+ * Model representing an individual grade or mark entry.
  */
 data class MarkEntry(
     var id: String = "",

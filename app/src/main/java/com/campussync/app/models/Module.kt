@@ -1,8 +1,7 @@
 package com.campussync.app.models
 
 /**
- * Data class representing a University Module.
- * Used to group timetable entries and marks.
+ * Model representing a university subject or module.
  */
 data class Module(
     var id: String = "",

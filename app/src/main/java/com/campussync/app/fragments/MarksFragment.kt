@@ -26,8 +26,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
- * Fragment for tracking academic marks.
- * Groups assessments by Module and displays both individual and module-level weighted averages.
+ * Fragment for tracking academic marks and calculating weighted averages.
  */
 class MarksFragment : Fragment() {
 
@@ -76,33 +75,24 @@ class MarksFragment : Fragment() {
                 Pair(marks, modules)
             }.collect { (marks, modules) ->
                 binding.progressBar.visibility = View.GONE
-                
-                // 1. Calculate and display Overall Weighted Average
+
                 val overallAverage = repository.calculateWeightedAverage(marks)
                 binding.tvAverageValue.text = String.format(Locale.getDefault(), "%.1f%%", overallAverage)
 
-                // 2. Build the grouped list (Headers + Items)
                 val listItems = mutableListOf<MarkListItem>()
                 val groupedMarks = marks.groupBy { it.moduleCode }
-                
-                // Sort modules by code for consistent display
                 val sortedModules = modules.sortedBy { it.code }
-                
+
                 for (module in sortedModules) {
                     val moduleMarks = groupedMarks[module.code] ?: emptyList()
                     if (moduleMarks.isNotEmpty()) {
-                        // Calculate average for this specific module
                         val moduleAverage = repository.calculateWeightedAverage(moduleMarks)
-                        
-                        // Add Header for the Module
+
                         listItems.add(MarkListItem.Header(module.code, module.name, moduleAverage))
-                        
-                        // Add all Mark Items belonging to this Module
                         moduleMarks.forEach { listItems.add(MarkListItem.Item(it)) }
                     }
                 }
-                
-                // Handle cases where a mark exists for a code not in the current module list
+
                 val orphanMarks = groupedMarks.filter { entry -> modules.none { it.code == entry.key } }
                 for ((code, mMarks) in orphanMarks) {
                     val avg = repository.calculateWeightedAverage(mMarks)
