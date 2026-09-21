@@ -1,6 +1,7 @@
 package com.campussync.app.data
 
 import com.campussync.app.models.MarkEntry
+import com.campussync.app.utils.MarkUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -77,19 +78,9 @@ class MarkRepository {
     }
 
     /**
-     * Calculates the weighted average for a list of marks.
+     * Delegates weighted average calculation to MarkUtils.
      */
     fun calculateWeightedAverage(marks: List<MarkEntry>): Double {
-        if (marks.isEmpty()) return 0.0
-        var totalWeightedMark = 0.0
-        var totalWeight = 0.0
-        
-        for (m in marks) {
-            totalWeightedMark += (m.mark * m.weight)
-            totalWeight += m.weight
-        }
-        
-        if (totalWeight == 0.0) return 0.0
-        return totalWeightedMark / totalWeight
+        return MarkUtils.calculateWeightedAverage(marks)
     }
 }
