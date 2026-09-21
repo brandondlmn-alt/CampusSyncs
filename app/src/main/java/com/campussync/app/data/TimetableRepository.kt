@@ -11,13 +11,13 @@ import kotlinx.coroutines.tasks.await
 
 /**
  * Repository for managing Timetable entries in Firestore.
- * Handles CRUD operations and real-time updates.
  */
 class TimetableRepository {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-    private val collection = db.collection("timetable")
+    // Initialize Firebase instances lazily to allow unit testing without a mock environment.
+    private val db by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val collection by lazy { db.collection("timetable") }
 
     private fun getUserId(): String = auth.currentUser?.uid ?: ""
 
@@ -62,7 +62,6 @@ class TimetableRepository {
 
     /**
      * Returns a Flow of timetable entries for the current user, updated in real-time.
-     * Sorted by day and then by start time.
      */
     fun getTimetableEntries(): Flow<List<TimetableEntry>> = callbackFlow {
         val subscription = collection
@@ -74,7 +73,6 @@ class TimetableRepository {
                 }
                 val entries = snapshot?.toObjects(TimetableEntry::class.java) ?: emptyList()
                 
-                // Sorting logic: Days are strings, so we sort them based on a custom order
                 val dayOrder = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
                 val sortedEntries = entries.sortedWith(compareBy(
                     { dayOrder.indexOf(it.dayOfWeek) },

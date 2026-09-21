@@ -11,9 +11,9 @@ import kotlinx.coroutines.tasks.await
  */
 class ChatRepository {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-    private val collection = db.collection("chats")
+    private val db by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val collection by lazy { db.collection("chats") }
     private val TAG = "ChatRepository"
 
     private fun getUserId(): String = auth.currentUser?.uid ?: ""

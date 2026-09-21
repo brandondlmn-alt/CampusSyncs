@@ -15,8 +15,9 @@ import java.util.Calendar
  */
 class BudgetRepository {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    // Initialize Firebase instances lazily to allow unit testing without a mock environment.
+    private val db by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
     
     private fun getUserId(): String = auth.currentUser?.uid ?: ""
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
  */
 class ResourceRepository {
 
-    private val db = FirebaseFirestore.getInstance()
+    private val db by lazy { FirebaseFirestore.getInstance() }
 
     /**
      * Fetches all bursary entries from Firestore.

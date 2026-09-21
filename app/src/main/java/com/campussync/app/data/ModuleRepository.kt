@@ -9,13 +9,14 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /**
- * Repository for managing student Modules.
+ * Repository for managing student Modules in Firestore.
  */
 class ModuleRepository {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-    private val collection = db.collection("modules")
+    // Initialize Firebase instances lazily to allow unit testing without a mock environment.
+    private val db by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val collection by lazy { db.collection("modules") }
 
     private fun getUserId(): String = auth.currentUser?.uid ?: ""
 

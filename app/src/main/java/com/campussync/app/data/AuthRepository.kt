@@ -11,30 +11,21 @@ import kotlinx.coroutines.tasks.await
  */
 class AuthRepository {
 
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val db by lazy { FirebaseFirestore.getInstance() }
 
-    /**
-     * Registers a new user with email and password, then saves their profile to Firestore.
-     */
     suspend fun register(email: String, password: String, profile: User): Result<User> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: throw Exception("User registration failed: No UID")
-            
             profile.uid = uid
-            
             db.collection("users").document(uid).set(profile).await()
-            
             Result.success(profile)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    /**
-     * Logs in an existing user.
-     */
     suspend fun login(email: String, password: String): Result<User?> {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
@@ -51,9 +42,6 @@ class AuthRepository {
         }
     }
 
-    /**
-     * Fetches the current user profile from Firestore.
-     */
     suspend fun getCurrentUserProfile(): Result<User?> {
         return try {
             val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
@@ -65,9 +53,6 @@ class AuthRepository {
         }
     }
 
-    /**
-     * Updates the user profile in Firestore.
-     */
     suspend fun updateUserProfile(user: User): Result<Unit> {
         return try {
             val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
@@ -78,17 +63,12 @@ class AuthRepository {
         }
     }
 
-    /**
-     * Changes the user's password with re-verification.
-     */
     suspend fun changePassword(currentPassword: String, newPassword: String): Result<Unit> {
         return try {
             val user = auth.currentUser ?: throw Exception("No user logged in")
             val email = user.email ?: throw Exception("User email not found")
-            
             val credential = EmailAuthProvider.getCredential(email, currentPassword)
             user.reauthenticate(credential).await()
-            
             user.updatePassword(newPassword).await()
             Result.success(Unit)
         } catch (e: Exception) {
@@ -96,9 +76,6 @@ class AuthRepository {
         }
     }
 
-    /**
-     * Sends a password reset email.
-     */
     suspend fun resetPassword(email: String): Result<Unit> {
         return try {
             auth.sendPasswordResetEmail(email).await()
@@ -108,24 +85,11 @@ class AuthRepository {
         }
     }
 
-    /**
-     * Signs out the current user.
-     */
     fun logout() {
         auth.signOut()
     }
 
-    /**
-     * Checks if a user is currently logged in.
-     */
-    fun isUserLoggedIn(): Boolean {
-        return auth.currentUser != null
-    }
+    fun isUserLoggedIn(): Boolean = auth.currentUser != null
 
-    /**
-     * Gets the current user ID.
-     */
-    fun getCurrentUserId(): String? {
-        return auth.currentUser?.uid
-    }
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
 }
