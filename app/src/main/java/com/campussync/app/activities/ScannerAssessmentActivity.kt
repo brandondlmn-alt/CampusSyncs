@@ -100,12 +100,10 @@ class ScannerAssessmentActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // 1. Get user year and target programme code
                 val year = getUserYear()
                 val programmeCode = yearToProgrammeCode(year)
                 Log.d(TAG, "Filtering assessments by programme code: $programmeCode")
 
-                // 2. Read image
                 val inputStream = contentResolver.openInputStream(uri)
                 val bytes = inputStream?.readBytes() ?: throw Exception("Could not read image")
                 inputStream.close()
@@ -114,11 +112,9 @@ class ScannerAssessmentActivity : AppCompatActivity() {
                     throw Exception(getString(R.string.error_image_too_large))
                 }
 
-                // API 24 compatible Base64
                 val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
                 val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
 
-                // 3. Call Gemini with filter (Layer 1)
                 val result = geminiRepo.extractAssessmentsFromImage(
                     imageBase64 = base64,
                     mimeType = mimeType,
@@ -129,7 +125,7 @@ class ScannerAssessmentActivity : AppCompatActivity() {
                     onSuccess = { entries ->
                         setLoading(false)
                         
-                        // Layer 2: Kotlin-side Filter (Safety Net)
+                        // Secondary client-side filter to ensure data integrity.
                         val filtered = if (programmeCode.isNotBlank()) {
                             entries.filter { it.programmeCode.trim().uppercase() == programmeCode }
                         } else {

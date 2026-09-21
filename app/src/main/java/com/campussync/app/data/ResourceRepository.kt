@@ -6,15 +6,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 /**
- * Repository for fetching academic resources (Bursaries and Accommodation).
- * These are read-only for students.
+ * Repository for fetching academic resources such as Bursaries and Accommodation.
  */
 class ResourceRepository {
 
     private val db = FirebaseFirestore.getInstance()
 
     /**
-     * Fetches all bursaries from Firestore.
+     * Fetches all bursary entries from Firestore.
      */
     suspend fun getBursaries(): Result<List<Bursary>> {
         return try {

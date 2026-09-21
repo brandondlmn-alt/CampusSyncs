@@ -6,6 +6,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Repository for managing Chat history in Firestore.
+ */
 class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
@@ -15,6 +18,9 @@ class ChatRepository {
 
     private fun getUserId(): String = auth.currentUser?.uid ?: ""
 
+    /**
+     * Saves a message to Firestore.
+     */
     suspend fun saveMessage(message: ChatMessage): Result<Unit> {
         return try {
             val uid = getUserId()
@@ -29,12 +35,15 @@ class ChatRepository {
         }
     }
 
+    /**
+     * Loads chat history for the current user.
+     */
     suspend fun getChatHistory(): Result<List<ChatMessage>> {
         return try {
             val uid = getUserId()
             if (uid.isEmpty()) return Result.failure(Exception("User not logged in"))
 
-            // Simplest possible query: only one 'where' clause, NO 'orderBy'
+            // Query messages for the current user.
             val snapshot = collection
                 .whereEqualTo("studentId", uid)
                 .get()
@@ -42,7 +51,7 @@ class ChatRepository {
 
             val history = snapshot.toObjects(ChatMessage::class.java)
 
-            // WE SORT LOCALLY IN KOTLIN (Does not require Firestore Index)
+            // Sort history client-side by timestamp.
             val sortedHistory = history.sortedBy { it.timestamp }
 
             Log.d(TAG, "Loaded ${sortedHistory.size} messages from history")

@@ -13,8 +13,7 @@ import com.campussync.app.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
 /**
- * Activity for user login.
- * Handles authentication via Firebase and validation of inputs.
+ * Activity that handles user login and authentication via Firebase.
  */
 class LoginActivity : AppCompatActivity() {
 
@@ -46,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
 
-        // Input validation
         if (email.isEmpty()) {
             binding.tilEmail.error = "Email is required"
             return

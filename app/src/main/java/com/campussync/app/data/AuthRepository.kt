@@ -7,8 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 /**
- * Repository class to handle Firebase Authentication and Firestore user profile operations.
- * Uses Coroutines (await()) for cleaner asynchronous code.
+ * Repository for Firebase Authentication and Firestore user profile management.
  */
 class AuthRepository {
 
@@ -23,10 +22,8 @@ class AuthRepository {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: throw Exception("User registration failed: No UID")
             
-            // Update profile with the new UID
             profile.uid = uid
             
-            // Save to Firestore
             db.collection("users").document(uid).set(profile).await()
             
             Result.success(profile)
@@ -89,11 +86,9 @@ class AuthRepository {
             val user = auth.currentUser ?: throw Exception("No user logged in")
             val email = user.email ?: throw Exception("User email not found")
             
-            // Re-authenticate
             val credential = EmailAuthProvider.getCredential(email, currentPassword)
             user.reauthenticate(credential).await()
             
-            // Update password
             user.updatePassword(newPassword).await()
             Result.success(Unit)
         } catch (e: Exception) {

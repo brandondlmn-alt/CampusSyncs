@@ -12,8 +12,7 @@ import com.campussync.app.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
 /**
- * Main Activity of the application.
- * Handles the 4-item bottom navigation and the top-menu navigation for Marks and Resources.
+ * Main Activity that hosts the primary navigation fragments and handles toolbar menu actions.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +36,6 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Setup bottom navigation (Dashboard, Timetable, Budget, Assistant)
         binding.bottomNav.setupWithNavController(navController)
     }
 

@@ -9,8 +9,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /**
- * Repository for managing Mark entries in Firestore.
- * Handles CRUD operations and provides real-time updates.
+ * Repository for managing student academic marks in Firestore.
  */
 class MarkRepository {
 
@@ -21,7 +20,7 @@ class MarkRepository {
     private fun getUserId(): String = auth.currentUser?.uid ?: ""
 
     /**
-     * Adds a new mark entry.
+     * Adds a new mark entry to Firestore.
      */
     suspend fun addMark(mark: MarkEntry): Result<Unit> {
         return try {
@@ -36,7 +35,7 @@ class MarkRepository {
     }
 
     /**
-     * Updates an existing mark entry.
+     * Updates an existing mark entry in Firestore.
      */
     suspend fun updateMark(mark: MarkEntry): Result<Unit> {
         return try {
@@ -48,7 +47,7 @@ class MarkRepository {
     }
 
     /**
-     * Deletes a mark entry.
+     * Deletes a specific mark entry from Firestore.
      */
     suspend fun deleteMark(markId: String): Result<Unit> {
         return try {
@@ -60,7 +59,7 @@ class MarkRepository {
     }
 
     /**
-     * Returns a Flow of mark entries for the current user, updated in real-time.
+     * Returns a real-time Flow of mark entries for the current user.
      */
     fun getMarkEntries(): Flow<List<MarkEntry>> = callbackFlow {
         val subscription = collection
@@ -77,8 +76,7 @@ class MarkRepository {
     }
 
     /**
-     * Logic for calculating weighted average.
-     * sum(mark * weight) / sum(weight)
+     * Calculates the weighted average for a list of marks.
      */
     fun calculateWeightedAverage(marks: List<MarkEntry>): Double {
         if (marks.isEmpty()) return 0.0

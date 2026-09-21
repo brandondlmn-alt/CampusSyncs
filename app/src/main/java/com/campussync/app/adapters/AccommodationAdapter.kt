@@ -9,7 +9,7 @@ import com.campussync.app.databinding.ItemAccommodationBinding
 import com.campussync.app.models.Accommodation
 
 /**
- * Adapter for displaying Accommodation listings.
+ * Adapter for displaying student accommodation options.
  */
 class AccommodationAdapter : ListAdapter<Accommodation, AccommodationAdapter.AccommodationViewHolder>(AccommodationDiffCallback()) {
 

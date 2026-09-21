@@ -1,12 +1,15 @@
 package com.campussync.app.utils
 
 /**
- * Single source of truth for Rosebank International academic data.
+ * Catalog providing module mappings and campus locations.
  */
 object ModuleCatalog {
 
     data class Module(val code: String, val name: String)
 
+    /**
+     * Returns a list of modules for a specific year and semester.
+     */
     fun getModulesFor(year: Int, semester: Int): List<Module> {
         return when (year to semester) {
             (1 to 1) -> listOf(

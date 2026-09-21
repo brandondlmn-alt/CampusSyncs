@@ -1,7 +1,7 @@
 package com.campussync.app.models
 
 /**
- * Sealed class to represent different types of items in the Marks list.
+ * Represents the different item types displayed in the marks list.
  */
 sealed class MarkListItem {
     data class Header(

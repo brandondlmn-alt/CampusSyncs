@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 /**
- * Intelligent AI Chatbot that provides analytical advice on academics and finances.
- * Saves and loads chat history from Firestore for a persistent experience.
+ * AI Chatbot Fragment that provides analytical advice on academics and finances.
+ * Context-aware responses based on student data.
  */
 class ChatbotFragment : Fragment() {
 
@@ -81,8 +81,8 @@ class ChatbotFragment : Fragment() {
                         }
                     },
                     onFailure = { e ->
-                        Log.e(TAG, "Failed to load history", e)
-                        addMessage("Ready. (History unavailable)", false, saveToFirestore = false)
+                        Log.e(TAG, "History load failed", e)
+                        addMessage("Assistant ready.", false, saveToFirestore = false)
                     }
                 )
             }
@@ -104,13 +104,12 @@ class ChatbotFragment : Fragment() {
                 val fullPrompt = """
                     SYSTEM INSTRUCTION: You are a direct Academic and Financial Analyst.
                     1. Respond ONLY to the question asked. 
-                    2. NO greetings, NO filler, NO conversational "fluff".
-                    3. If asked for a budget/money, do NOT just state the balance. Calculate a daily spending limit for the remaining days of the month and suggest which categories to prioritize.
-                    4. If asked about grades, identify the weakest subject and suggest one specific study action.
-                    5. If asked about schedule, identify the next most important gap or class.
-                    6. Limit response to 25 words max.
+                    2. NO greetings, NO conversational filler.
+                    3. If asked for a budget/money, analyze categories and provide a daily spending limit for the remaining month.
+                    4. If asked about grades, identify the weakest subject and suggest one study action.
+                    5. Keep response under 30 words.
                     
-                    STUDENT DATA:
+                    DATA:
                     $context
                     
                     QUESTION:
@@ -129,7 +128,7 @@ class ChatbotFragment : Fragment() {
             } catch (e: Exception) {
                 if (_binding != null) {
                     setLoading(false)
-                    Log.e(TAG, "AI process failed", e)
+                    Log.e(TAG, "AI processing failed", e)
                 }
             }
         }
@@ -138,28 +137,27 @@ class ChatbotFragment : Fragment() {
     private suspend fun buildStudentContext(): String {
         val sb = StringBuilder()
         val now = Calendar.getInstance()
-        val daysInMonth = now.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val currentDay = now.get(Calendar.DAY_OF_MONTH)
-        val daysLeft = daysInMonth - currentDay + 1
+        val daysLeft = now.getActualMaximum(Calendar.DAY_OF_MONTH) - now.get(Calendar.DAY_OF_MONTH) + 1
 
-        sb.append("Context: Day $currentDay/$daysInMonth ($daysLeft left). ")
+        sb.append("Month Progress: Day ${now.get(Calendar.DAY_OF_MONTH)}, $daysLeft days left. ")
         
         authRepo.getCurrentUserProfile().onSuccess { user ->
             user?.let { sb.append("Student: ${it.firstName}. ") }
         }
         
         val marks = markRepo.getMarkEntries().first()
-        sb.append("Avg: ${String.format("%.1f", markRepo.calculateWeightedAverage(marks))}%. Marks: ${marks.joinToString { "${it.moduleCode}:${it.mark}%" }}. ")
+        sb.append("Average: ${String.format("%.1f", markRepo.calculateWeightedAverage(marks))}%. Grades: ${marks.joinToString { "${it.moduleCode}:${it.mark}%" }}. ")
         
-        budgetRepo.getBudgetSettings().onSuccess { settings ->
-            val allowance = settings?.monthlyAllowance ?: 0.0
-            val expenses = budgetRepo.getCurrentMonthExpenses().first()
-            val spent = expenses.sumOf { it.amount }
-            sb.append("Finance: R${allowance - spent} left of R$allowance. ")
-        }
+        val settingsResult = budgetRepo.getBudgetSettings()
+        val allowance = settingsResult.getOrNull()?.monthlyAllowance ?: 0.0
+        val expenses = budgetRepo.getCurrentMonthExpenses().first()
+        val spent = expenses.sumOf { it.amount }
+        val catSummary = expenses.groupBy { it.category }.mapValues { it.value.sumOf { exp -> exp.amount } }
+        
+        sb.append("Budget: R${allowance - spent} remaining of R$allowance. Categories: $catSummary. ")
         
         val timetable = timetableRepo.getTimetableEntries().first()
-        sb.append("Schedule: ${timetable.take(5).joinToString { "${it.dayOfWeek} ${it.startTime}(${it.moduleCode})" }}.")
+        sb.append("Upcoming: ${timetable.take(5).joinToString { "${it.dayOfWeek} ${it.startTime}(${it.moduleCode})" }}.")
         
         return sb.toString()
     }
