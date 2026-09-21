@@ -3,12 +3,14 @@ package com.campussync.app.utils
 import com.campussync.app.models.MarkEntry
 
 /**
- * Utility for performing academic calculations without Firebase dependencies.
+ * Pure utility for academic calculations.
+ * This object contains no Firebase dependencies to ensure stability during unit testing.
  */
 object MarkUtils {
 
     /**
-     * Calculates the weighted average for a list of marks.
+     * Calculates the weighted average: sum(mark * weight) / sum(weight).
+     * Returns 0.0 if the list is empty or total weight is zero.
      */
     fun calculateWeightedAverage(marks: List<MarkEntry>): Double {
         if (marks.isEmpty()) return 0.0
