@@ -7,7 +7,7 @@ import org.junit.Test
 
 /**
  * Unit tests for academic mark calculation logic.
- * These tests use MarkUtils to avoid any Firebase/Android dependencies.
+ * Decoupled from Firebase to ensure CI stability.
  */
 class MarkCalculationTest {
 
