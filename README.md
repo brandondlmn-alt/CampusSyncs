@@ -103,7 +103,7 @@ CampusSync uses a CI/CD pipeline defined in `.github/workflows/build.yml`.
 
 ## 📝 Release Notes
 
-### VERSION 1.5.0 (Final PoE)
+### VERSION 1.5.0 (Part 2)
 *   Integrated analytical AI Student Assistant.
 *   Released Gemini Vision Timetable and PAS scanners.
 *   Added 3-step Rosebank registration wizard.
