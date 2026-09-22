@@ -122,7 +122,7 @@ CampusSync uses a CI/CD pipeline defined in `.github/workflows/build.yml`.
 
 ## 🎥 Demonstration Video
 
-[Watch the CampusSync demo on YouTube]([https://youtu.be/so2wW3AkKpA])
+[Watch the CampusSync demo on Google drive]([https://drive.google.com/file/d/1NIMpmc7HYnRkz94DwP7KAzPpuO9VSvjJ/view?usp=drive_link])
 
 ---
 
