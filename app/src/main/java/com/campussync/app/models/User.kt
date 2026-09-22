@@ -1,7 +1,7 @@
 package com.campussync.app.models
 
 /**
- * Updated User model to capture Rosebank International academic details and preferences.
+ * Data model representing a student profile and academic settings.
  */
 data class User(
     var uid: String = "",

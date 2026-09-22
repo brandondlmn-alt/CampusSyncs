@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registrationProgress">
 
-        <!-- STEP 1: ACCOUNT -->
+        <!-- STEP 1: ACCOUNT & IDENTITY -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -42,9 +42,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/step_account"
+                    android:text="Personal Details"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                     android:layout_marginBottom="24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilFirstName"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First Name"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName|textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLastName"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Surname"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName|textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
@@ -236,10 +264,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="16dp">
-                        <TextView android:id="@+id/tvReviewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCampus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCourse" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name: " android:layout_marginBottom="4dp" android:textStyle="bold"/>
+                        <TextView android:id="@+id/tvReviewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email: " android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewCampus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Campus: " android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewCourse" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Course: " android:layout_marginBottom="4dp"/>
+                        <TextView android:id="@+id/tvReviewYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Year: " android:layout_marginBottom="4dp"/>
                         <TextView android:id="@+id/tvReviewSemester" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

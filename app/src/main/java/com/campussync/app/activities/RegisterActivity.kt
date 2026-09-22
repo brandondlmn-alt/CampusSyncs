@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 /**
- * Extended RegisterActivity with a 3-step wizard.
- * Captures account details, Rosebank International academic profile, and auto-assigns modules.
+ * Activity that handles the multi-step student registration process.
+ * Captures user identity, account credentials, and academic details.
  */
 class RegisterActivity : AppCompatActivity() {
 
@@ -26,7 +26,8 @@ class RegisterActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
-    // Registration state
+    private var firstName = ""
+    private var lastName = ""
     private var email = ""
     private var password = ""
     private var isRosebank = true
@@ -65,7 +66,7 @@ class RegisterActivity : AppCompatActivity() {
             isRosebank = isChecked
             binding.layoutInstitutionFields.visibility = if (isChecked) View.VISIBLE else View.GONE
             binding.tvManualNote.visibility = if (isChecked) View.GONE else View.VISIBLE
-            binding.tvOptimizationNote.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.tvOptimizationNote.visibility = if (isChecked) View.GONE else View.VISIBLE
             binding.btnNextStep2.text = if (isChecked) "Next" else "Register"
         }
 
@@ -78,27 +79,36 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun validateStep1() {
+        firstName = binding.etFirstName.text.toString().trim()
+        lastName = binding.etLastName.text.toString().trim()
         email = binding.etEmail.text.toString().trim()
         password = binding.etPassword.text.toString().trim()
         val confirm = binding.etConfirmPassword.text.toString().trim()
 
+        if (firstName.isEmpty()) {
+            binding.tilFirstName.error = "Required"
+            return
+        } else binding.tilFirstName.error = null
+
+        if (lastName.isEmpty()) {
+            binding.tilLastName.error = "Required"
+            return
+        } else binding.tilLastName.error = null
+
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.tilEmail.error = "Invalid email format"
             return
-        }
-        binding.tilEmail.error = null
+        } else binding.tilEmail.error = null
 
         if (password.length < 6) {
             binding.tilPassword.error = "Minimum 6 characters"
             return
-        }
-        binding.tilPassword.error = null
+        } else binding.tilPassword.error = null
 
         if (password != confirm) {
             binding.tilConfirmPassword.error = "Passwords do not match"
             return
-        }
-        binding.tilConfirmPassword.error = null
+        } else binding.tilConfirmPassword.error = null
 
         moveToStep(1) // Moves to Step 2
     }
@@ -122,6 +132,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupReviewStep() {
+        binding.tvReviewName.text = "Name: $firstName $lastName"
         binding.tvReviewEmail.text = "Email: $email"
         binding.tvReviewCampus.text = "Campus: $campus"
         binding.tvReviewCourse.text = "Course: $course"
@@ -156,7 +167,7 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
                 val userId = result.user?.uid ?: ""
-                saveUserToFirestore(userId)
+                saveUserAndModulesToFirestore(userId)
             }
             .addOnFailureListener { e ->
                 setLoading(false)
@@ -164,29 +175,49 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveUserToFirestore(userId: String) {
-        val modules = if (isRosebank) {
+    private fun saveUserAndModulesToFirestore(userId: String) {
+        val batch = db.batch()
+
+        // 1. Prepare assigned modules to be saved as individual documents in 'modules' collection
+        val catalogModules = if (isRosebank) {
             ModuleCatalog.getModulesFor(year, semester)
-                .map { mapOf("code" to it.code, "name" to it.name) }
         } else emptyList()
 
+        catalogModules.forEach { catalogModule ->
+            val moduleDocRef = db.collection("modules").document()
+            val moduleData = hashMapOf(
+                "id" to moduleDocRef.id,
+                "studentId" to userId,
+                "code" to catalogModule.code,
+                "name" to catalogModule.name,
+                "targetClassesPerWeek" to 3 // Default target
+            )
+            batch.set(moduleDocRef, moduleData)
+        }
+
+        // 2. Prepare user profile data
+        val enrolledModulesList = catalogModules.map { mapOf("code" to it.code, "name" to it.name) }
+        val userDocRef = db.collection("users").document(userId)
         val userData = hashMapOf(
             "uid" to userId,
             "email" to email,
-            "firstName" to "",
-            "lastName" to "",
+            "firstName" to firstName,
+            "lastName" to lastName,
             "isRosebankStudent" to isRosebank,
             "campusLocation" to campus,
             "course" to course,
             "yearOfStudy" to year,
             "currentSemester" to semester,
-            "enrolledModules" to modules,
+            "enrolledModules" to enrolledModulesList,
             "language" to "en",
+            "notificationsEnabled" to true,
             "createdAt" to System.currentTimeMillis(),
             "updatedAt" to System.currentTimeMillis()
         )
+        batch.set(userDocRef, userData)
 
-        db.collection("users").document(userId).set(userData)
+        // 3. Execute batch write
+        batch.commit()
             .addOnSuccessListener {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -195,7 +226,7 @@ class RegisterActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 setLoading(false)
-                Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Setup Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
