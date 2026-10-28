@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 /**
  * Repository for managing academic assessment data.
@@ -32,5 +33,17 @@ class AssessmentRepository {
                 trySend(assessments)
             }
         awaitClose { subscription.remove() }
+    }
+
+    /**
+     * Updates the completion status of an assessment.
+     */
+    suspend fun updateCompletionStatus(assessmentId: String, isCompleted: Boolean): Result<Unit> {
+        return try {
+            collection.document(assessmentId).update("completed", isCompleted).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

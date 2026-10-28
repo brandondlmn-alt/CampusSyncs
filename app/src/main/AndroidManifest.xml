@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusSync">
 
-        <!-- SplashActivity is the entry point -->
+        <!-- SplashActivity the entry point -->
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
@@ -62,6 +64,11 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/scanner_assessment_title" />
+
+        <receiver
+            android:name=".utils.AssessmentNotificationReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

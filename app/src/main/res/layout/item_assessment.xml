@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardAssessment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
@@ -22,8 +23,9 @@
             android:background="@android:color/holo_green_dark" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -76,24 +78,37 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:text="Turnitin"
+                    app:chipBackgroundColor="@color/primary_light"
                     app:chipCornerRadius="12dp"
                     app:chipMinHeight="32dp"
                     app:chipStrokeWidth="0dp"
-                    app:chipBackgroundColor="@color/primary_light"
-                    app:chipIconEnabled="false"
                     android:visibility="gone" />
 
             </LinearLayout>
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvMethod"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="16dp">
+
+            <CheckBox
+                android:id="@+id/cbComplete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/text_secondary"
-                tools:text="Online Submission (Arc)" />
+                android:buttonTint="@color/primary_blue"
+                android:contentDescription="Mark as complete" />
 
+            <ImageButton
+                android:id="@+id/btnNotification"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_lock_idle_alarm"
+                app:tint="@color/text_secondary" />
         </LinearLayout>
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
