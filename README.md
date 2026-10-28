@@ -81,7 +81,7 @@ CampusSync follows the **Repository Pattern**, promoting a clean separation of c
 ### Installation
 1.  Clone the repository:
     ```bash
-    git clone [YOUR_GITHUB_URL]
+    git clone [https://github.com/brandondlmn-alt/CampusSyncs.git]
     ```
 2.  Place your `google-services.json` in the `app/` directory.
 3.  Create a `local.properties` file and add:
@@ -103,7 +103,7 @@ CampusSync uses a CI/CD pipeline defined in `.github/workflows/build.yml`.
 
 ## 📝 Release Notes
 
-### VERSION 1.5.0 (Final PoE)
+### VERSION 1.5.0 (Part 2)
 *   Integrated analytical AI Student Assistant.
 *   Released Gemini Vision Timetable and PAS scanners.
 *   Added 3-step Rosebank registration wizard.
@@ -122,7 +122,7 @@ CampusSync uses a CI/CD pipeline defined in `.github/workflows/build.yml`.
 
 ## 🎥 Demonstration Video
 
-[Watch the CampusSync demo on YouTube]([YOUR_YOUTUBE_LINK])
+[Watch the CampusSync demo on Google drive]([https://drive.google.com/file/d/1NIMpmc7HYnRkz94DwP7KAzPpuO9VSvjJ/view?usp=drive_link])
 
 ---
 
