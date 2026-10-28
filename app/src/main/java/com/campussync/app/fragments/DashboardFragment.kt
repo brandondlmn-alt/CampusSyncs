@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,10 +24,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Dashboard Fragment that aggregates data from all features.
- * Updated to handle upcoming assessments without requiring a composite index.
- */
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -43,17 +40,13 @@ class DashboardFragment : Fragment() {
     private val TAG = "DashboardFragment"
     private var currentAverage = 0.0
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
         binding.rvRecentMarks.adapter = markAdapter
         loadDashboardData()
         setupAiAssistant()
@@ -63,27 +56,32 @@ class DashboardFragment : Fragment() {
     private fun loadDashboardData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                
-                binding.progressBar.visibility = View.VISIBLE
+                try {
+                    if (_binding != null) binding.progressBar.visibility = View.VISIBLE
 
-                // 1. Load User Profile
-                authRepo.getCurrentUserProfile().onSuccess { user ->
-                    if (_binding != null) {
-                        binding.tvWelcome.text = "Hi, ${user?.firstName ?: "Student"}!"
+                    authRepo.getCurrentUserProfile().onSuccess { user ->
+                        if (_binding != null) {
+                            binding.tvWelcome.text = "Hi, ${user?.firstName ?: "Student"}!"
+                        }
                     }
-                }
 
-                // 2. Aggregate real-time data
-                combine(
-                    timetableRepo.getTimetableEntries(),
-                    markRepo.getMarkEntries(),
-                    budgetRepo.getCurrentMonthExpenses()
-                ) { timetable, marks, expenses ->
-                    DashboardData(timetable, marks, expenses)
-                }.collect { data ->
+                    combine(
+                        timetableRepo.getTimetableEntries(),
+                        markRepo.getMarkEntries(),
+                        budgetRepo.getCurrentMonthExpenses()
+                    ) { timetable, marks, expenses ->
+                        DashboardData(timetable, marks, expenses)
+                    }.collect { data ->
+                        if (_binding != null) {
+                            binding.progressBar.visibility = View.GONE
+                            updateUI(data)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error collecting dashboard data", e)
                     if (_binding != null) {
                         binding.progressBar.visibility = View.GONE
-                        updateUI(data)
+                        Toast.makeText(requireContext(), "Failed to load dashboard data.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -93,32 +91,26 @@ class DashboardFragment : Fragment() {
     private fun updateUI(data: DashboardData) {
         if (_binding == null) return
 
-        // --- Next Class ---
         val nextClass = findNextClass(data.timetable)
-        if (nextClass != null) {
-            binding.tvNextClass.text = "${nextClass.moduleCode} @ ${nextClass.startTime}"
-            binding.tvNextClassVenue.text = nextClass.venue
-        } else {
-            binding.tvNextClass.text = "No classes today"
-            binding.tvNextClassVenue.text = "Enjoy your break!"
-        }
+        binding.tvNextClass.text = nextClass?.let { "${it.moduleCode} @ ${it.startTime}" } ?: "No classes today"
 
-        // --- Academic Average ---
         currentAverage = markRepo.calculateWeightedAverage(data.marks)
         binding.tvCurrentAvg.text = String.format(Locale.getDefault(), "%.1f%%", currentAverage)
 
-        // --- Budget Remaining ---
         viewLifecycleOwner.lifecycleScope.launch {
-            budgetRepo.getBudgetSettings().onSuccess { settings ->
-                if (_binding != null) {
-                    val allowance = settings?.monthlyAllowance ?: 0.0
-                    val spent = data.expenses.sumOf { it.amount }
-                    binding.tvBudgetRemaining.text = String.format(Locale.getDefault(), "R %.0f", (allowance - spent))
+            try {
+                budgetRepo.getBudgetSettings().onSuccess { settings ->
+                    if (_binding != null) {
+                        val allowance = settings?.monthlyAllowance ?: 0.0
+                        val spent = data.expenses.sumOf { it.amount }
+                        binding.tvBudgetRemaining.text = String.format(Locale.getDefault(), "R %.0f", (allowance - spent))
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating budget UI", e)
             }
         }
 
-        // --- Recent Assessments ---
         val recentMarks = data.marks
             .sortedByDescending { it.id }
             .take(3)
@@ -130,14 +122,17 @@ class DashboardFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
 
-        // Simplified query to avoid index requirement
         db.collection("assessments")
             .whereEqualTo("studentId", uid)
-            .addSnapshotListener { snapshot, _ ->
+            .addSnapshotListener { snapshot, error ->
                 if (_binding == null) return@addSnapshotListener
-                val allAssessments = snapshot?.toObjects(Assessment::class.java) ?: emptyList()
                 
-                // Filter and sort client-side
+                if (error != null) {
+                    Log.e(TAG, "Assessment listener error", error)
+                    return@addSnapshotListener
+                }
+
+                val allAssessments = snapshot?.toObjects(Assessment::class.java) ?: emptyList()
                 val upcoming = allAssessments
                     .filter { !it.completed && it.dueDate >= today }
                     .sortedBy { it.dueDate }
@@ -149,12 +144,10 @@ class DashboardFragment : Fragment() {
 
     private fun updateDeadlinesUI(assessments: List<Assessment>) {
         if (_binding == null) return
-        
         if (assessments.isEmpty()) {
             binding.tvDeadlinesSummary.text = "No upcoming deadlines 🎉"
             return
         }
-
         val sb = StringBuilder()
         assessments.forEach { assessment ->
             val countdown = DateUtils.getCountdown(assessment.dueDate)
@@ -167,24 +160,28 @@ class DashboardFragment : Fragment() {
     private fun setupAiAssistant() {
         binding.btnGetAiTip.setOnClickListener {
             val prompt = if (currentAverage > 0) {
-                "I am a student with a current weighted average of ${String.format("%.1f", currentAverage)}%. " +
-                "Give me one short, highly practical study tip. Keep it under 30 words."
+                "Academic average is ${String.format("%.1f", currentAverage)}%. Give one concise study tip under 30 words."
             } else {
-                "I am a student. Give me one short study tip. Keep it under 30 words."
+                "Give one concise study tip for a new semester under 30 words."
             }
 
             setAiLoading(true)
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = geminiRepo.generateContent(prompt)
-                if (_binding != null) {
-                    setAiLoading(false)
-                    result.fold(
-                        onSuccess = { tip -> binding.tvAiResponse.text = tip.trim() },
-                        onFailure = { e -> 
-                            binding.tvAiResponse.text = "Try again later"
-                            Log.e(TAG, "AI Error", e)
-                        }
-                    )
+                try {
+                    val result = geminiRepo.generateContent(prompt)
+                    if (_binding != null) {
+                        setAiLoading(false)
+                        result.fold(
+                            onSuccess = { tip -> binding.tvAiResponse.text = tip.trim() },
+                            onFailure = { e -> 
+                                binding.tvAiResponse.text = "Error generating tip"
+                                Log.e(TAG, "AI Error", e)
+                            }
+                        )
+                    }
+                } catch (e: Exception) {
+                    if (_binding != null) setAiLoading(false)
+                    Log.e(TAG, "AI Exception", e)
                 }
             }
         }
@@ -200,13 +197,9 @@ class DashboardFragment : Fragment() {
     private fun findNextClass(entries: List<TimetableEntry>): TimetableEntry? {
         if (entries.isEmpty()) return null
         val now = Calendar.getInstance()
-        val days = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-        val currentDay = days[now.get(Calendar.DAY_OF_WEEK) - 1]
-        val currentTime = String.format("%02d:%02d", now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
-
-        return entries
-            .filter { it.dayOfWeek == currentDay && it.startTime >= currentTime }
-            .minByOrNull { it.startTime }
+        val currentDay = SimpleDateFormat("EEEE", Locale.US).format(now.time)
+        val currentTime = SimpleDateFormat("HH:mm", Locale.US).format(now.time)
+        return entries.filter { it.dayOfWeek == currentDay && it.startTime >= currentTime }.minByOrNull { it.startTime }
     }
 
     data class DashboardData(

@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="8dp">
+    android:paddingHorizontal="24dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/primary_blue"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,8 +28,9 @@
             android:id="@+id/tvModuleName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
             app:layout_constraintBottom_toBottomOf="@id/tvModuleCode"
             app:layout_constraintEnd_toStartOf="@id/tvModuleAverage"
             app:layout_constraintStart_toEndOf="@id/tvModuleCode"
@@ -40,8 +41,11 @@
             android:id="@+id/tvModuleAverage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="?attr/colorPrimary"
+            android:background="@drawable/bg_badge_rounded"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="@color/primary_blue"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tvModuleCode"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +57,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_marginTop="12dp"
+        android:background="@color/divider" />
 
 </LinearLayout>

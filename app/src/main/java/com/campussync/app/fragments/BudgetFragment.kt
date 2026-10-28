@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.campussync.app.R
@@ -17,15 +19,13 @@ import com.campussync.app.databinding.DialogAddExpenseBinding
 import com.campussync.app.databinding.FragmentBudgetBinding
 import com.campussync.app.models.BudgetSettings
 import com.campussync.app.models.Expense
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-/**
- * Fragment for tracking student expenses and managing a monthly budget.
- * Displays a circular progress of the remaining budget and a list of current month expenses.
- */
 class BudgetFragment : Fragment() {
 
     private var _binding: FragmentBudgetBinding? = null
@@ -37,28 +37,19 @@ class BudgetFragment : Fragment() {
     private var currentExpenses: List<Expense> = emptyList()
     private val TAG = "BudgetFragment"
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBudgetBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
         loadBudgetSettings()
         observeExpenses()
 
-        binding.fabAddExpense.setOnClickListener {
-            showAddEditExpenseDialog(null)
-        }
-
-        binding.btnEditBudget.setOnClickListener {
-            showSetAllowanceDialog()
-        }
+        binding.fabAddExpense.setOnClickListener { showAddEditExpenseDialog(null) }
+        binding.btnEditBudget.setOnClickListener { showSetAllowanceDialog() }
     }
 
     private fun setupRecyclerView() {
@@ -70,53 +61,58 @@ class BudgetFragment : Fragment() {
     }
 
     private fun loadBudgetSettings() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repository.getBudgetSettings().fold(
                 onSuccess = { settings ->
-                    budgetSettings = settings
-                    updateBudgetUI(currentExpenses)
+                    if (_binding != null) {
+                        budgetSettings = settings
+                        updateBudgetUI(currentExpenses)
+                    }
                 },
-                onFailure = { e ->
-                    Log.e(TAG, "Failed to load budget settings", e)
-                }
+                onFailure = { e -> Log.e(TAG, "Failed to load budget settings", e) }
             )
         }
     }
 
     private fun observeExpenses() {
+        if (_binding == null) return
         binding.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            repository.getCurrentMonthExpenses().collect { expenses ->
-                currentExpenses = expenses
-                binding.progressBar.visibility = View.GONE
-                adapter.submitList(expenses)
-                updateBudgetUI(expenses)
-                binding.tvEmptyState.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                repository.getCurrentMonthExpenses().collect { expenses ->
+                    if (_binding != null) {
+                        currentExpenses = expenses
+                        binding.progressBar.visibility = View.GONE
+                        adapter.submitList(expenses)
+                        updateBudgetUI(expenses)
+                        binding.tvEmptyState.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
+                    }
+                }
+            } catch (e: Exception) {
+                if (_binding != null) {
+                    binding.progressBar.visibility = View.GONE
+                    Log.e(TAG, "Error observing expenses", e)
+                    Toast.makeText(requireContext(), "Failed to load expenses.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     private fun updateBudgetUI(expenses: List<Expense>) {
+        if (_binding == null) return
         val allowance = budgetSettings?.monthlyAllowance ?: 0.0
         val totalSpent = expenses.sumOf { it.amount }
         val remaining = allowance - totalSpent
         
-        binding.tvBudgetStatus.text = String.format(
-            Locale.getDefault(),
-            "R %.2f remaining of R %.2f",
-            remaining,
-            allowance
-        )
+        binding.tvBudgetStatus.text = String.format(Locale.getDefault(), "R %.2f remaining of R %.2f", remaining, allowance)
 
         if (allowance > 0) {
             val progress = ((totalSpent / allowance) * 100).toInt()
             binding.progressBudget.progress = progress.coerceIn(0, 100)
-            
-            // Visual feedback: change color if over budget
             if (totalSpent > allowance) {
-                binding.progressBudget.setIndicatorColor(resources.getColor(android.R.color.holo_red_dark, null))
+                binding.progressBudget.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.accent_red))
             } else {
-                binding.progressBudget.setIndicatorColor(resources.getColor(R.color.colorPrimary, null))
+                binding.progressBudget.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.primary_blue))
             }
         } else {
             binding.progressBudget.progress = 0
@@ -124,22 +120,32 @@ class BudgetFragment : Fragment() {
     }
 
     private fun showSetAllowanceDialog() {
-        val editText = TextInputEditText(requireContext())
+        val container = FrameLayout(requireContext())
+        val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        lp.setMargins(28.dpToPx(), 16.dpToPx(), 28.dpToPx(), 0.dpToPx())
+        
+        val til = TextInputLayout(requireContext(), null, com.google.android.material.R.style.Widget_Material3_TextInputLayout_OutlinedBox)
+        til.layoutParams = lp
+        til.hint = "Monthly Allowance (R)"
+        til.setBoxCornerRadii(20.dpToPx().toFloat(), 20.dpToPx().toFloat(), 20.dpToPx().toFloat(), 20.dpToPx().toFloat())
+        
+        val editText = TextInputEditText(til.context)
         editText.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
         editText.setText(budgetSettings?.monthlyAllowance?.toString() ?: "")
+        til.addView(editText)
+        container.addView(til)
         
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle("Set Monthly Allowance")
-            .setMessage("Enter your total budget for the month:")
-            .setView(editText)
+            .setView(container)
             .setPositiveButton("Save") { _, _ ->
                 val amount = editText.text.toString().toDoubleOrNull() ?: 0.0
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     repository.updateBudgetSettings(amount).fold(
                         onSuccess = {
                             budgetSettings = BudgetSettings(monthlyAllowance = amount)
                             Snackbar.make(binding.root, "Allowance updated", Snackbar.LENGTH_SHORT).show()
-                            updateBudgetUI(currentExpenses)
+                            loadBudgetSettings()
                         },
                         onFailure = { Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show() }
                     )
@@ -152,10 +158,8 @@ class BudgetFragment : Fragment() {
     private fun showAddEditExpenseDialog(expense: Expense?) {
         val dialogBinding = DialogAddExpenseBinding.inflate(layoutInflater)
         val isEdit = expense != null
-
         val categories = arrayOf("Food", "Transport", "Printing", "Entertainment", "Other")
-        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
-        dialogBinding.actvCategory.setAdapter(categoryAdapter)
+        dialogBinding.actvCategory.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories))
 
         if (isEdit) {
             dialogBinding.tvDialogTitle.text = "Edit Expense"
@@ -164,63 +168,58 @@ class BudgetFragment : Fragment() {
             dialogBinding.etDescription.setText(expense?.description)
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setView(dialogBinding.root)
             .setPositiveButton(if (isEdit) "Update" else "Add", null)
             .setNegativeButton("Cancel", null)
-            .create()
+            .create().apply {
+                setOnShowListener {
+                    getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                        val category = dialogBinding.actvCategory.text.toString()
+                        val amount = dialogBinding.etAmount.text.toString().toDoubleOrNull()
+                        val desc = dialogBinding.etDescription.text.toString().trim()
 
-        dialog.setOnShowListener {
-            val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            button.setOnClickListener {
-                val category = dialogBinding.actvCategory.text.toString()
-                val amount = dialogBinding.etAmount.text.toString().toDoubleOrNull()
-                val desc = dialogBinding.etDescription.text.toString().trim()
-
-                if (category.isEmpty() || amount == null) {
-                    Toast.makeText(requireContext(), "Please enter category and amount", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                val newExpense = (expense ?: Expense()).copy(
-                    category = category,
-                    amount = amount,
-                    description = desc
-                )
-
-                lifecycleScope.launch {
-                    val result = if (isEdit) repository.updateExpense(newExpense) else repository.addExpense(newExpense)
-                    result.fold(
-                        onSuccess = {
-                            dialog.dismiss()
-                            Snackbar.make(binding.root, "Expense saved", Snackbar.LENGTH_SHORT).show()
-                        },
-                        onFailure = { e ->
-                            Log.e(TAG, "Save failed", e)
-                            Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        if (category.isEmpty() || amount == null) {
+                            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
                         }
-                    )
+
+                        val newExpense = (expense ?: Expense()).copy(category = category, amount = amount, description = desc)
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            val result = if (isEdit) repository.updateExpense(newExpense) else repository.addExpense(newExpense)
+                            if (_binding != null) {
+                                result.fold(
+                                    onSuccess = { dismiss(); Snackbar.make(binding.root, "Expense saved", Snackbar.LENGTH_SHORT).show() },
+                                    onFailure = { e -> Log.e(TAG, "Save failed", e); Toast.makeText(requireContext(), "Error saving", Toast.LENGTH_SHORT).show() }
+                                )
+                            }
+                        }
+                    }
                 }
+                show()
             }
-        }
-        dialog.show()
     }
 
     private fun confirmDeletion(expense: Expense) {
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete Expense")
-            .setMessage("Remove this expense: ${expense.description}?")
+            .setMessage("Remove this expense?")
             .setPositiveButton("Delete") { _, _ ->
-                lifecycleScope.launch {
-                    repository.deleteExpense(expense.id).fold(
-                        onSuccess = { Snackbar.make(binding.root, "Expense removed", Snackbar.LENGTH_SHORT).show() },
-                        onFailure = { Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show() }
-                    )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val result = repository.deleteExpense(expense.id)
+                    if (_binding != null) {
+                        result.fold(
+                            onSuccess = { Snackbar.make(binding.root, "Expense removed", Snackbar.LENGTH_SHORT).show() },
+                            onFailure = { Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show() }
+                        )
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+    private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
 
     override fun onDestroyView() {
         super.onDestroyView()

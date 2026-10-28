@@ -19,7 +19,6 @@ class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
     private val TAG = "SplashActivity"
-    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +34,16 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkAuthStatus() {
-        if (auth.currentUser != null) {
-            Log.d(TAG, "User is signed in, navigating to MainActivity")
+        // Get the current user directly from FirebaseAuth to ensure we have the latest state
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null) {
+            Log.d(TAG, "User is signed in (UID: ${currentUser.uid}), navigating to MainActivity")
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             Log.d(TAG, "User is not signed in, navigating to LoginActivity")
             startActivity(Intent(this, LoginActivity::class.java))
         }
-        finish() // Close splash activity
+        finish() // Close splash activity so user can't press "Back" to return to it
     }
 }

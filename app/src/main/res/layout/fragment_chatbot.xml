@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_100"
+    android:background="@color/bg_soft"
     tools:context=".fragments.ChatbotFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -12,28 +12,29 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:padding="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/inputContainer"
+        app:layout_constraintBottom_toTopOf="@id/inputCard"
         app:layout_constraintTop_toTopOf="parent"
         app:stackFromEnd="true"
         tools:listitem="@layout/item_chat_message_ai" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/inputContainer"
+        android:id="@+id/inputCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_margin="16dp"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:strokeWidth="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <EditText
                 android:id="@+id/etMessage"
@@ -46,17 +47,21 @@
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="4"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColor="@color/text_main"
+                android:textColorHint="@color/text_secondary" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnSend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                app:fabCustomSize="40dp"
+                app:backgroundTint="@color/primary_blue"
+                app:fabCustomSize="48dp"
                 app:elevation="0dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.CampusSync.Rounded.Large"
                 app:srcCompat="@android:drawable/ic_menu_send"
-                app:tint="@android:color/white" />
+                app:tint="@color/white" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -66,10 +71,10 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/inputContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/inputContainer" />
+        app:layout_constraintBottom_toBottomOf="@id/inputCard"
+        app:layout_constraintEnd_toEndOf="@id/inputCard"
+        app:layout_constraintTop_toTopOf="@id/inputCard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

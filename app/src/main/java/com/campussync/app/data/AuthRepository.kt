@@ -32,10 +32,17 @@ class AuthRepository {
             val uid = auth.currentUser?.uid
             if (uid != null) {
                 val snapshot = db.collection("users").document(uid).get().await()
-                val user = snapshot.toObject(User::class.java)
-                Result.success(user)
+
+                // Check if the document actually exists in Firestore
+                if (snapshot.exists()) {
+                    val user = snapshot.toObject(User::class.java)
+                    Result.success(user)
+                } else {
+                    // Auth succeeded, but Firestore profile is missing
+                    Result.failure(Exception("User profile not found. Please contact support or register again."))
+                }
             } else {
-                Result.failure(Exception("Login failed: User null"))
+                Result.failure(Exception("Login failed: User is null"))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -46,8 +53,13 @@ class AuthRepository {
         return try {
             val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
             val snapshot = db.collection("users").document(uid).get().await()
-            val user = snapshot.toObject(User::class.java)
-            Result.success(user)
+
+            if (snapshot.exists()) {
+                val user = snapshot.toObject(User::class.java)
+                Result.success(user)
+            } else {
+                Result.failure(Exception("User profile not found in database"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

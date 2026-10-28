@@ -6,25 +6,26 @@
     android:layout_height="wrap_content"
     android:gravity="start"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="4dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="64dp"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="2dp"
-        app:contentPadding="12dp"
-        app:strokeColor="?attr/colorPrimary"
+        app:strokeColor="@color/primary_light"
         app:strokeWidth="1dp">
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_main"
             tools:text="How can I help you with your studies today?" />
     </com.google.android.material.card.MaterialCardView>
 

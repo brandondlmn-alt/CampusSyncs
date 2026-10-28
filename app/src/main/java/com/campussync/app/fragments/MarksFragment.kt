@@ -68,51 +68,65 @@ class MarksFragment : Fragment() {
     private fun observeData() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            combine(
-                repository.getMarkEntries(),
-                moduleRepository.getModules()
-            ) { marks, modules ->
-                Pair(marks, modules)
-            }.collect { (marks, modules) ->
-                binding.progressBar.visibility = View.GONE
+            try {
+                combine(
+                    repository.getMarkEntries(),
+                    moduleRepository.getModules()
+                ) { marks, modules ->
+                    Pair(marks, modules)
+                }.collect { (marks, modules) ->
+                    if (_binding != null) {
+                        binding.progressBar.visibility = View.GONE
 
-                val overallAverage = repository.calculateWeightedAverage(marks)
-                binding.tvAverageValue.text = String.format(Locale.getDefault(), "%.1f%%", overallAverage)
+                        val overallAverage = repository.calculateWeightedAverage(marks)
+                        binding.tvAverageValue.text = String.format(Locale.getDefault(), "%.1f%%", overallAverage)
 
-                val listItems = mutableListOf<MarkListItem>()
-                val groupedMarks = marks.groupBy { it.moduleCode }
-                val sortedModules = modules.sortedBy { it.code }
+                        val listItems = mutableListOf<MarkListItem>()
+                        val groupedMarks = marks.groupBy { it.moduleCode }
+                        val sortedModules = modules.sortedBy { it.code }
 
-                for (module in sortedModules) {
-                    val moduleMarks = groupedMarks[module.code] ?: emptyList()
-                    if (moduleMarks.isNotEmpty()) {
-                        val moduleAverage = repository.calculateWeightedAverage(moduleMarks)
+                        for (module in sortedModules) {
+                            val moduleMarks = groupedMarks[module.code] ?: emptyList()
+                            if (moduleMarks.isNotEmpty()) {
+                                val moduleAverage = repository.calculateWeightedAverage(moduleMarks)
 
-                        listItems.add(MarkListItem.Header(module.code, module.name, moduleAverage))
-                        moduleMarks.forEach { listItems.add(MarkListItem.Item(it)) }
+                                listItems.add(MarkListItem.Header(module.code, module.name, moduleAverage))
+                                moduleMarks.forEach { listItems.add(MarkListItem.Item(it)) }
+                            }
+                        }
+
+                        val orphanMarks = groupedMarks.filter { entry -> modules.none { it.code == entry.key } }
+                        for ((code, mMarks) in orphanMarks) {
+                            val avg = repository.calculateWeightedAverage(mMarks)
+                            listItems.add(MarkListItem.Header(code, "Unknown Module", avg))
+                            mMarks.forEach { listItems.add(MarkListItem.Item(it)) }
+                        }
+
+                        adapter.submitList(listItems)
+                        binding.tvEmptyState.visibility = if (listItems.isEmpty()) View.VISIBLE else View.GONE
                     }
                 }
-
-                val orphanMarks = groupedMarks.filter { entry -> modules.none { it.code == entry.key } }
-                for ((code, mMarks) in orphanMarks) {
-                    val avg = repository.calculateWeightedAverage(mMarks)
-                    listItems.add(MarkListItem.Header(code, "Unknown Module", avg))
-                    mMarks.forEach { listItems.add(MarkListItem.Item(it)) }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load marks", e)
+                if (_binding != null) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Failed to load marks. Please try again.", Toast.LENGTH_SHORT).show()
                 }
-
-                adapter.submitList(listItems)
-                binding.tvEmptyState.visibility = if (listItems.isEmpty()) View.VISIBLE else View.GONE
             }
         }
     }
 
     private fun checkModulesAndShowDialog(mark: MarkEntry?) {
         lifecycleScope.launch {
-            val modules = moduleRepository.getModules().first()
-            if (modules.isEmpty()) {
-                Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
-            } else {
-                showAddEditDialog(mark, modules)
+            try {
+                val modules = moduleRepository.getModules().first()
+                if (modules.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
+                } else {
+                    showAddEditDialog(mark, modules)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error checking modules", e)
             }
         }
     }

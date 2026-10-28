@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_soft"
     tools:context=".activities.RegisterActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -17,10 +18,13 @@
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/registrationProgress"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="6dp"
         android:max="3"
         android:progress="1"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:indicatorColor="@color/primary_blue"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:trackColor="@color/primary_light"
+        app:trackThickness="6dp" />
 
     <ViewFlipper
         android:id="@+id/viewFlipper"
@@ -32,7 +36,9 @@
         <!-- STEP 1: ACCOUNT & IDENTITY -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,94 +48,140 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
                     android:text="Personal Details"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:layout_marginBottom="24dp"/>
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:textColor="@color/primary_blue"
+                    android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilFirstName"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="First Name"
-                    android:layout_marginBottom="16dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etFirstName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName|textCapWords" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilLastName"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Surname"
-                    android:layout_marginBottom="16dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etLastName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName|textCapWords" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEmail"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_email"
-                    android:layout_marginBottom="16dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilFirstName"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="First Name"
+                            app:boxCornerRadiusBottomEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusTopStart="20dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPassword"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_password"
-                    app:passwordToggleEnabled="true"
-                    android:layout_marginBottom="16dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
-                </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etFirstName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName|textCapWords" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilConfirmPassword"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_confirm_password"
-                    app:passwordToggleEnabled="true"
-                    android:layout_marginBottom="32dp">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etConfirmPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilLastName"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="Surname"
+                            app:boxCornerRadiusBottomEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusTopStart="20dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etLastName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName|textCapWords" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilEmail"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/hint_email"
+                            app:boxCornerRadiusBottomEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusTopStart="20dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textEmailAddress" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilPassword"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/hint_password"
+                            app:boxCornerRadiusBottomEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusTopStart="20dp"
+                            app:endIconMode="password_toggle">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPassword" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilConfirmPassword"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/hint_confirm_password"
+                            app:boxCornerRadiusBottomEnd="20dp"
+                            app:boxCornerRadiusBottomStart="20dp"
+                            app:boxCornerRadiusTopEnd="20dp"
+                            app:boxCornerRadiusTopStart="20dp"
+                            app:endIconMode="password_toggle">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etConfirmPassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPassword" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNextStep1"
+                    style="@style/Widget.CampusSync.Button.Pill"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Next" />
+                    android:layout_height="64dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Next"
+                    android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
 
         <!-- STEP 2: INSTITUTION DETAILS -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,108 +191,153 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/step_institution"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:layout_marginBottom="16dp"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchRosebank"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/is_rosebank_student"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:id="@+id/tvOptimizationNote"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/optimization_note"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"/>
-
-                <LinearLayout
-                    android:id="@+id/layoutInstitutionFields"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_campus"
-                        android:layout_marginBottom="16dp">
-                        <AutoCompleteTextView
-                            android:id="@+id/actvCampus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_course"
-                        android:layout_marginBottom="16dp">
-                        <AutoCompleteTextView
-                            android:id="@+id/actvCourse"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_year"
-                        android:layout_marginBottom="16dp">
-                        <AutoCompleteTextView
-                            android:id="@+id/actvYear"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_semester"
-                        android:layout_marginBottom="24dp">
-                        <AutoCompleteTextView
-                            android:id="@+id/actvSemester"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvManualNote"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/manual_modules_note"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_marginBottom="24dp"
-                    android:visibility="gone"/>
+                    android:text="@string/step_institution"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:textColor="@color/primary_blue"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switchRosebank"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/is_rosebank_student"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                        <TextView
+                            android:id="@+id/tvOptimizationNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/optimization_note"
+                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                            android:textColor="@color/text_secondary"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutInstitutionFields"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/hint_campus"
+                                app:boxCornerRadiusBottomEnd="20dp"
+                                app:boxCornerRadiusBottomStart="20dp"
+                                app:boxCornerRadiusTopEnd="20dp"
+                                app:boxCornerRadiusTopStart="20dp">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/actvCampus"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:hint="@string/hint_course"
+                                app:boxCornerRadiusBottomEnd="20dp"
+                                app:boxCornerRadiusBottomStart="20dp"
+                                app:boxCornerRadiusTopEnd="20dp"
+                                app:boxCornerRadiusTopStart="20dp">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/actvCourse"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:hint="@string/hint_year"
+                                app:boxCornerRadiusBottomEnd="20dp"
+                                app:boxCornerRadiusBottomStart="20dp"
+                                app:boxCornerRadiusTopEnd="20dp"
+                                app:boxCornerRadiusTopStart="20dp">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/actvYear"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:hint="@string/hint_semester"
+                                app:boxCornerRadiusBottomEnd="20dp"
+                                app:boxCornerRadiusBottomStart="20dp"
+                                app:boxCornerRadiusTopEnd="20dp"
+                                app:boxCornerRadiusTopStart="20dp">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/actvSemester"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvManualNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/manual_modules_note"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="@color/primary_blue"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNextStep2"
+                    style="@style/Widget.CampusSync.Button.Pill"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Next" />
+                    android:layout_height="64dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Next"
+                    android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
 
         <!-- STEP 3: REVIEW -->
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -250,26 +347,69 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
                     android:text="@string/review_header"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:layout_marginBottom="16dp"/>
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:textColor="@color/primary_blue"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.Material3.CardView.Elevated"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp">
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="6dp"
+                    app:strokeWidth="0dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
-                        <TextView android:id="@+id/tvReviewName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name: " android:layout_marginBottom="4dp" android:textStyle="bold"/>
-                        <TextView android:id="@+id/tvReviewEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCampus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Campus: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewCourse" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Course: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Year: " android:layout_marginBottom="4dp"/>
-                        <TextView android:id="@+id/tvReviewSemester" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/tvReviewName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Name: "
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="@color/primary_blue"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvReviewEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Email: " />
+
+                        <TextView
+                            android:id="@+id/tvReviewCampus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Campus: " />
+
+                        <TextView
+                            android:id="@+id/tvReviewCourse"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Course: " />
+
+                        <TextView
+                            android:id="@+id/tvReviewYear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Year: " />
+
+                        <TextView
+                            android:id="@+id/tvReviewSemester"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Semester: " />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -277,29 +417,35 @@
                     android:id="@+id/tvReviewModulesHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="12dp"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/primary_blue"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvModuleReview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="16dp"
                     tools:listitem="@layout/item_module_review" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="@string/review_modules_note"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:layout_marginBottom="32dp"/>
+                    android:textColor="@color/text_secondary" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegister"
+                    style="@style/Widget.CampusSync.Button.Pill"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Register" />
+                    android:layout_height="64dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Register"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

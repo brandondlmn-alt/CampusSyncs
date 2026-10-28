@@ -2,7 +2,6 @@ package com.campussync.app.activities
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -60,10 +59,17 @@ class ModulesActivity : AppCompatActivity() {
     private fun observeModules() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            repository.getModules().collect { modules ->
+            try {
+                // Safety catch for Flow errors
+                repository.getModules().collect { modules ->
+                    binding.progressBar.visibility = View.GONE
+                    adapter.submitList(modules)
+                    binding.tvEmptyState.visibility = if (modules.isEmpty()) View.VISIBLE else View.GONE
+                }
+            } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                adapter.submitList(modules)
-                binding.tvEmptyState.visibility = if (modules.isEmpty()) View.VISIBLE else View.GONE
+                Log.e(TAG, "Error observing modules", e)
+                Toast.makeText(this@ModulesActivity, "Failed to load modules: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }

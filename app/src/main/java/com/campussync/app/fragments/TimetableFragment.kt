@@ -80,22 +80,36 @@ class TimetableFragment : Fragment() {
 
     private fun observeTimetable() {
         binding.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            repository.getTimetableEntries().collect { entries ->
-                binding.progressBar.visibility = View.GONE
-                adapter.submitList(entries)
-                binding.tvEmptyState.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                repository.getTimetableEntries().collect { entries ->
+                    if (_binding != null) {
+                        binding.progressBar.visibility = View.GONE
+                        adapter.submitList(entries)
+                        binding.tvEmptyState.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to collect timetable entries", e)
+                if (_binding != null) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Failed to load timetable. Please try again.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     private fun checkModulesAndShowDialog(entry: TimetableEntry?) {
-        lifecycleScope.launch {
-            val modules = moduleRepository.getModules().first()
-            if (modules.isEmpty()) {
-                Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
-            } else {
-                showAddEditDialog(entry, modules)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val modules = moduleRepository.getModules().first()
+                if (modules.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
+                } else {
+                    showAddEditDialog(entry, modules)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to check modules", e)
             }
         }
     }
@@ -162,18 +176,20 @@ class TimetableFragment : Fragment() {
                     venue = venue
                 )
 
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     val result = if (isEdit) repository.updateEntry(newEntry) else repository.addEntry(newEntry)
-                    result.fold(
-                        onSuccess = {
-                            dialog.dismiss()
-                            Snackbar.make(binding.root, "Timetable updated", Snackbar.LENGTH_SHORT).show()
-                        },
-                        onFailure = { e ->
-                            Log.e(TAG, "Save failed", e)
-                            Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    )
+                    if (_binding != null) {
+                        result.fold(
+                            onSuccess = {
+                                dialog.dismiss()
+                                Snackbar.make(binding.root, "Timetable updated", Snackbar.LENGTH_SHORT).show()
+                            },
+                            onFailure = { e ->
+                                Log.e(TAG, "Save failed", e)
+                                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -200,11 +216,14 @@ class TimetableFragment : Fragment() {
             .setTitle("Delete Entry")
             .setMessage("Delete ${entry.moduleCode} class?")
             .setPositiveButton("Delete") { _, _ ->
-                lifecycleScope.launch {
-                    repository.deleteEntry(entry.id).fold(
-                        onSuccess = { Snackbar.make(binding.root, "Entry deleted", Snackbar.LENGTH_SHORT).show() },
-                        onFailure = { Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show() }
-                    )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val result = repository.deleteEntry(entry.id)
+                    if (_binding != null) {
+                        result.fold(
+                            onSuccess = { Snackbar.make(binding.root, "Entry deleted", Snackbar.LENGTH_SHORT).show() },
+                            onFailure = { Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show() }
+                        )
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)

@@ -1,9 +1,47 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.CampusSync" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_light</item>
+        <item name="colorOnPrimaryContainer">@color/primary_blue</item>
+
+        <!-- Accent/Error colors -->
+        <item name="colorError">@color/accent_red</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Background and Surface -->
+        <item name="android:windowBackground">@color/bg_soft</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_main</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+
+        <!-- Custom Shape Appearances for the "Bubbly" look -->
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.CampusSync.Rounded.Large</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.CampusSync.Rounded.Medium</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.CampusSync.Rounded.Small</item>
     </style>
 
     <style name="Theme.CampusSync" parent="Base.Theme.CampusSync" />
+
+    <!-- Bubbly Shapes -->
+    <style name="ShapeAppearance.CampusSync.Rounded.Large" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <style name="ShapeAppearance.CampusSync.Rounded.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="ShapeAppearance.CampusSync.Rounded.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Pill shaped button style -->
+    <style name="Widget.CampusSync.Button.Pill" parent="Widget.Material3.Button">
+        <item name="cornerRadius">50dp</item>
+        <item name="android:insetTop">8dp</item>
+        <item name="android:insetBottom">8dp</item>
+    </style>
 </resources>

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.campussync.app.R
 import com.campussync.app.adapters.ModuleReviewAdapter
@@ -15,10 +16,12 @@ import com.campussync.app.models.EnrolledModule
 import com.campussync.app.utils.ModuleCatalog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 /**
- * Activity that handles the multi-step student registration process.
- * Captures user identity, account credentials, and academic details.
+ * Activity for student registration.
+ * Captures personal details and auto-assigns academic modules with a target of 2 classes per week.
  */
 class RegisterActivity : AppCompatActivity() {
 
@@ -48,7 +51,6 @@ class RegisterActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationOnClickListener { handleBack() }
 
-        // Setup Dropdowns for Step 2
         val campusAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ModuleCatalog.campusLocations)
         binding.actvCampus.setAdapter(campusAdapter)
 
@@ -61,7 +63,6 @@ class RegisterActivity : AppCompatActivity() {
         val semAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ModuleCatalog.semesters)
         binding.actvSemester.setAdapter(semAdapter)
 
-        // Switch Logic to toggle institutional fields
         binding.switchRosebank.setOnCheckedChangeListener { _, isChecked ->
             isRosebank = isChecked
             binding.layoutInstitutionFields.visibility = if (isChecked) View.VISIBLE else View.GONE
@@ -70,7 +71,6 @@ class RegisterActivity : AppCompatActivity() {
             binding.btnNextStep2.text = if (isChecked) "Next" else "Register"
         }
 
-        // Navigation Buttons
         binding.btnNextStep1.setOnClickListener { validateStep1() }
         binding.btnNextStep2.setOnClickListener {
             if (isRosebank) validateStep2() else performRegistration()
@@ -110,7 +110,7 @@ class RegisterActivity : AppCompatActivity() {
             return
         } else binding.tilConfirmPassword.error = null
 
-        moveToStep(1) // Moves to Step 2
+        moveToStep(1)
     }
 
     private fun validateStep2() {
@@ -128,7 +128,7 @@ class RegisterActivity : AppCompatActivity() {
         semester = semStr.toInt()
 
         setupReviewStep()
-        moveToStep(2) // Moves to Step 3
+        moveToStep(2)
     }
 
     private fun setupReviewStep() {
@@ -163,71 +163,68 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun performRegistration() {
         setLoading(true)
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { result ->
-                val userId = result.user?.uid ?: ""
+        lifecycleScope.launch {
+            try {
+                val result = auth.createUserWithEmailAndPassword(email, password).await()
+                val userId = result.user?.uid ?: throw Exception("Auth failed")
                 saveUserAndModulesToFirestore(userId)
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 setLoading(false)
-                Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_LONG).show()
             }
+        }
     }
 
     private fun saveUserAndModulesToFirestore(userId: String) {
-        val batch = db.batch()
+        lifecycleScope.launch {
+            try {
+                val batch = db.batch()
 
-        // 1. Prepare assigned modules to be saved as individual documents in 'modules' collection
-        val catalogModules = if (isRosebank) {
-            ModuleCatalog.getModulesFor(year, semester)
-        } else emptyList()
+                // 1. Assign modules to the individual 'modules' collection with target = 2
+                val catalogModules = if (isRosebank) {
+                    ModuleCatalog.getModulesFor(year, semester)
+                } else emptyList()
 
-        catalogModules.forEach { catalogModule ->
-            val moduleDocRef = db.collection("modules").document()
-            val moduleData = hashMapOf(
-                "id" to moduleDocRef.id,
-                "studentId" to userId,
-                "code" to catalogModule.code,
-                "name" to catalogModule.name,
-                "targetClassesPerWeek" to 3 // Default target
-            )
-            batch.set(moduleDocRef, moduleData)
-        }
+                catalogModules.forEach { catalogModule ->
+                    val moduleDocRef = db.collection("modules").document()
+                    val moduleData = hashMapOf(
+                        "id" to moduleDocRef.id,
+                        "studentId" to userId,
+                        "code" to catalogModule.code,
+                        "name" to catalogModule.name,
+                        "targetClassesPerWeek" to 2 // As requested: target is 2
+                    )
+                    batch.set(moduleDocRef, moduleData)
+                }
 
-        // 2. Prepare user profile data
-        val enrolledModulesList = catalogModules.map { mapOf("code" to it.code, "name" to it.name) }
-        val userDocRef = db.collection("users").document(userId)
-        val userData = hashMapOf(
-            "uid" to userId,
-            "email" to email,
-            "firstName" to firstName,
-            "lastName" to lastName,
-            "isRosebankStudent" to isRosebank,
-            "campusLocation" to campus,
-            "course" to course,
-            "yearOfStudy" to year,
-            "currentSemester" to semester,
-            "enrolledModules" to enrolledModulesList,
-            "language" to "en",
-            "notificationsEnabled" to true,
-            "createdAt" to System.currentTimeMillis(),
-            "updatedAt" to System.currentTimeMillis()
-        )
-        batch.set(userDocRef, userData)
+                // 2. Save user profile
+                val userDocRef = db.collection("users").document(userId)
+                val userData = hashMapOf(
+                    "uid" to userId,
+                    "email" to email,
+                    "firstName" to firstName,
+                    "lastName" to lastName,
+                    "isRosebankStudent" to isRosebank,
+                    "campusLocation" to campus,
+                    "course" to course,
+                    "yearOfStudy" to year,
+                    "currentSemester" to semester,
+                    "language" to "en",
+                    "createdAt" to System.currentTimeMillis()
+                )
+                batch.set(userDocRef, userData)
 
-        // 3. Execute batch write
-        batch.commit()
-            .addOnSuccessListener {
-                val intent = Intent(this, MainActivity::class.java)
+                batch.commit().await()
+
+                val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finishAffinity()
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 setLoading(false)
-                Toast.makeText(this, "Setup Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, "Sync Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        }
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -235,13 +232,5 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnRegister.isEnabled = !isLoading
         binding.btnNextStep1.isEnabled = !isLoading
         binding.btnNextStep2.isEnabled = !isLoading
-        binding.toolbar.navigationIcon?.alpha = if (isLoading) 128 else 255
-        binding.toolbar.isEnabled = !isLoading
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (binding.loadingOverlay.visibility == View.VISIBLE) return
-        handleBack()
     }
 }

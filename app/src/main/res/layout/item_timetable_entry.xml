@@ -6,20 +6,22 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="24dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tvModuleCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/primary_blue"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="OPSC6312" />
@@ -30,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/text_secondary"
             app:layout_constraintBottom_toBottomOf="@id/tvModuleCode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvModuleCode"
@@ -40,10 +43,13 @@
             android:id="@+id/tvDayAndTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="8dp"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/text_main"
             app:drawableStartCompat="@android:drawable/ic_menu_my_calendar"
+            app:drawableTint="@color/primary_blue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvModuleCode"
             tools:text="Monday, 08:00 - 10:00" />
@@ -52,10 +58,13 @@
             android:id="@+id/tvVenue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="8dp"
+            android:layout_marginTop="6dp"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/text_main"
             app:drawableStartCompat="@android:drawable/ic_menu_directions"
+            app:drawableTint="@color/primary_blue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDayAndTime"
             tools:text="Room 102" />
