@@ -1,8 +1,10 @@
 package com.campussync.app.data
 
 import com.campussync.app.models.User
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -32,13 +34,10 @@ class AuthRepository {
             val uid = auth.currentUser?.uid
             if (uid != null) {
                 val snapshot = db.collection("users").document(uid).get().await()
-
-                // Check if the document actually exists in Firestore
                 if (snapshot.exists()) {
                     val user = snapshot.toObject(User::class.java)
                     Result.success(user)
                 } else {
-                    // Auth succeeded, but Firestore profile is missing
                     Result.failure(Exception("User profile not found. Please contact support or register again."))
                 }
             } else {
@@ -49,11 +48,41 @@ class AuthRepository {
         }
     }
 
+    /**
+     * Signs in with Google credentials and ensures a Firestore profile exists.
+     */
+    suspend fun signInWithGoogle(credential: AuthCredential): Result<User?> {
+        return try {
+            val result = auth.signInWithCredential(credential).await()
+            val firebaseUser = result.user ?: throw Exception("Google Sign-In failed")
+            val uid = firebaseUser.uid
+
+            val snapshot = db.collection("users").document(uid).get().await()
+            
+            if (snapshot.exists()) {
+                val user = snapshot.toObject(User::class.java)
+                Result.success(user)
+            } else {
+                // Create a basic profile for new Google users
+                val newUser = User(
+                    uid = uid,
+                    email = firebaseUser.email ?: "",
+                    firstName = firebaseUser.displayName?.split(" ")?.firstOrNull() ?: "",
+                    lastName = firebaseUser.displayName?.split(" ")?.getOrNull(1) ?: "",
+                    createdAt = System.currentTimeMillis()
+                )
+                db.collection("users").document(uid).set(newUser).await()
+                Result.success(newUser)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getCurrentUserProfile(): Result<User?> {
         return try {
             val uid = auth.currentUser?.uid ?: throw Exception("No user logged in")
             val snapshot = db.collection("users").document(uid).get().await()
-
             if (snapshot.exists()) {
                 val user = snapshot.toObject(User::class.java)
                 Result.success(user)

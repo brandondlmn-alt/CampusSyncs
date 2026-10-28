@@ -66,6 +66,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+
     // Navigation Component
     val navVersion = "2.8.8"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
