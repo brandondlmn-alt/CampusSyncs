@@ -1,7 +1,7 @@
 # CampusSync 📱
 
-> **Your Academic & Resource Command Center.** 
-> Specifically designed for Rosebank International students in South Africa.
+> **Your Academic & Resource Command Center.**
+> Designed for Rosebank International students in South Africa.
 
 [![Kotlin Version](https://img.shields.io/badge/kotlin-2.2.10-blue.svg)](https://kotlinlang.org/)
 [![API Level](https://img.shields.io/badge/API-24%2B-brightgreen.svg)](https://android-arsenal.com/api?level=24)
@@ -11,43 +11,55 @@
 
 ## 📖 Overview
 
-**CampusSync** is a comprehensive tertiary student management platform built for the **Independent Institute of Education (IIE)** module **OPSC6312 (Open Source Coding Intermediate)**. The application centralizes academic planning, grade tracking, budgeting, and resource discovery into a single, mobile-first experience. 
+**CampusSync** is a comprehensive tertiary student management platform built for the **Independent Institute of Education (IIE)** module **OPSC6312 (Open Source Coding Intermediate)**.
 
-Designed specifically for students in the **Diploma in IT in Software Development (DISD)** programme at **Rosebank International**, the app leverages state-of-the-art AI through the Google Gemini API to automate the most tedious parts of student life: scanning paper schedules and assessment guides.
+The app centralizes academic planning, grade tracking, budgeting, and resource discovery into a single, mobile-first experience. We built this specifically for students in the **Diploma in IT in Software Development (DISD)** programme at **Rosebank International**. To make student life easier, the app leverages the Google Gemini API to automate tedious tasks like scanning paper schedules and assessment guides, and uses Firebase for secure, real-time data syncing.
 
 ---
 
-## 📑 Table of Contents
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Firebase & AI Integration](#-firebase--ai-integration)
-- [GitHub Actions & CI/CD](#-github-actions--cicd)
-- [Release Notes](#-release-notes)
-- [Team Members](#-team-members)
-- [Demonstration](#-demonstration-video)
-- [References](#-references)
+## 📸 App Screenshots
+
+| Login & Register | Home Dashboard | Timetable & Marks |
+| :---: | :---: | :---: |
+| <img src="screenshots/Login_screen.png" width="250"/> | <img src="screenshots/homescreen.png" width="250"/> | <img src="screenshots/timetable.png" width="250"/> |
+
+| Assessments | Budget Tracker | AI Chatbot |
+| :---: | :---: | :---: |
+| <img src="screenshots/assessments.png" width="250"/> | <img src="screenshots/budget.png" width="250"/> | <img src="screenshots/chatbot.png" width="250"/> |
+
+| Bursaries | Accommodation | Settings & Multi-Language |
+| :---: | :---: | :---: |
+| <img src="screenshots/bursaries.png" width="250"/> | <img src="screenshots/accomadation.png" width="250"/> | <img src="screenshots/language.png" width="250"/> |
 
 ---
 
 ## ✨ Features
 
 ### 🎓 Academic Management
-*   **3-Step Registration Wizard**: Specialized onboarding for Rosebank students.
-*   **Auto-Assigned Modules**: Automatically populates your module list based on your Year (1-3) and Semester (1-2).
-*   **Smart Timetable**: Full CRUD support for your weekly schedule.
-*   **Grade Tracker**: Automatic weighted average calculation to monitor your academic standing.
-*   **Assessment Hub**: Track deadlines with color-coded urgency.
+*   **Smart Timetable**: Full CRUD support for your weekly schedule, with real-time syncing.
+*   **Grade Tracker**: Automatically calculates your overall weighted average.
+*   **Assessment Hub**: Track deadlines with color-coded urgency and custom filters.
 
-### 🤖 AI Innovation
-*   **AI Student Assistant**: A context-aware chatbot that knows your grades, budget, and schedule to provide personalized advice.
-*   **AI Timetable Scanner**: Upload a photo of your schedule; Gemini Vision extracts and saves the data to Firestore.
-*   **AI Assessment Scanner**: Extract deadlines from a Programme Assessment Schedule (PAS) image, filtered automatically by your year of study.
+### 🤖 AI Innovation (Powered by Gemini)
+*   **AI Student Assistant**: A context-aware chatbot that reads your live Firestore data (grades, budget, timetable) to give personalized advice.
+*   **AI Timetable Scanner**: Upload a photo of your schedule; Gemini Vision extracts the text and formats it into your app.
+*   **AI Assessment Scanner**: Extract deadlines directly from a Programme Assessment Schedule (PAS) image, filtering automatically by your year of study.
 
-### 💰 Student Life
+### 🔔 Real-time Notifications & Customisation
+*   **Custom Sticky Notifications**: Set custom date/time reminders for specific assignments using WorkManager. Notifications stay on screen until explicitly dismissed.
+*   **In-App Preferences**: Users can toggle notifications on/off and choose how many days in advance they want to be reminded.
+
+### 🔐 Authentication & Security
+*   **Google SSO**: Seamless single sign-on using the modern Credential Manager API.
+*   **Secure Email Login**: Standard email/password login with full input validation.
+*   **Firebase Security Rules**: Ensures students can only read and write their own data.
+
+### 🌍 Multi-Language Support
+*   **12 SA Languages**: Users can switch between English, Afrikaans, isiZulu, isiXhosa, isiNdebele, Sepedi, Sesotho, Setswana, siSwati, Tshivenda, and Xitsonga using the modern Per-App Language API.
+
+### 💰 Student Life Resources
 *   **Budget Tracker**: Manage your monthly allowance with category-based spending and visual progress indicators.
-*   **Resource Hub**: Searchable directory for South African bursaries and student accommodation.
+*   **Resource Hub**: A searchable directory populated with real South African bursaries and student accommodation options.
 
 ---
 
@@ -59,7 +71,8 @@ Designed specifically for students in the **Diploma in IT in Software Developmen
 | **UI Framework** | XML Layouts (Material Design 3) |
 | **Minimum SDK** | 24 (Android 7.0 Nougat) |
 | **Backend** | Firebase (Auth, Firestore) |
-| **AI Engine** | Google Gemini API (2.0 Flash) |
+| **AI Engine** | Google Gemini API |
+| **Background Tasks** | WorkManager |
 | **Networking** | OkHttp 4.12.0 |
 | **JSON Parsing** | Gson 2.11.0 |
 | **Architecture** | Repository Pattern with Coroutines |
@@ -72,61 +85,12 @@ CampusSync follows the **Repository Pattern**, promoting a clean separation of c
 
 1.  **UI Layer**: Fragments and Activities utilizing **View Binding**.
 2.  **Repository Layer**: Mediator between the UI and data sources.
-3.  **Data Layer**: Remote (Firestore) and AI (Gemini).
+3.  **Data Layer**: Remote (Firestore), AI (Gemini), and Local Notifications (WorkManager).
 
 ---
 
 ## 🚀 Getting Started
 
-### Installation
 1.  Clone the repository:
     ```bash
-    git clone [https://github.com/brandondlmn-alt/CampusSyncs.git]
-    ```
-2.  Place your `google-services.json` in the `app/` directory.
-3.  Create a `local.properties` file and add:
-    ```properties
-    GEMINI_API_KEY=your_key_here
-    ```
-4.  Sync and Run.
-
----
-
-## 🤖 GitHub Actions
-
-CampusSync uses a CI/CD pipeline defined in `.github/workflows/build.yml`.
-*   **Build Automation**: Triggers on every push to the `master` branch.
-*   **Automated Testing**: Runs unit tests for grade calculations and date normalization.
-*   **APK Generation**: Automatically builds a debug APK available in the Actions tab.
-
----
-
-## 📝 Release Notes
-
-### VERSION 1.5.0 (Part 2)
-*   Integrated analytical AI Student Assistant.
-*   Released Gemini Vision Timetable and PAS scanners.
-*   Added 3-step Rosebank registration wizard.
-*   Implemented color-coded deadline urgency.
-
----
-
-## 👥 Team Members
-*   Rendani Muthathe — ST10449327
-*   Manelisi Vatsha — ST10447923
-*   Brandon Dlamini — ST10442379
-*   Ofentse Rakosa — ST10443425
-*   Rashokeng Molokomme — ST10265955
-
----
-
-## 🎥 Demonstration Video
-
-[Watch the CampusSync demo on Google drive]([https://drive.google.com/file/d/1NIMpmc7HYnRkz94DwP7KAzPpuO9VSvjJ/view?usp=drive_link])
-
----
-
-## ⚖️ License
-This project is submitted for academic evaluation as part of IIE OPSC6312.
-
-**Disclaimer**: *CampusSync is not officially affiliated with or endorsed by Rosebank International or the IIE.*
+    git clone https://github.com/brandondlmn-alt/CampusSyncs.git
