@@ -94,3 +94,47 @@ CampusSync follows the **Repository Pattern**, promoting a clean separation of c
 1.  Clone the repository:
     ```bash
     git clone https://github.com/brandondlmn-alt/CampusSyncs.git
+Place your google-services.json in the app/ directory.
+
+Create a local.properties file and add your API keys:
+
+properties
+GEMINI_API_KEY=your_chat_key_here
+GEMINI_API_IMAGE_KEY=your_image_key_here
+Sync Gradle and Run.
+
+🤖 GitHub Actions & Automated Testing
+CampusSync uses a CI/CD pipeline defined in .github/workflows/build.yml.
+
+Build Automation: Triggers on every push to the master branch.
+
+Automated Testing: Runs JUnit tests covering core logic (Mark calculations, Date formatting, Budgeting, and JSON parsing).
+
+APK Generation: Automatically builds a debug APK available in the Actions tab.
+
+📝 Release Notes
+VERSION 2.0.0 (Final PoE)
+Added Google SSO: Integrated Credential Manager for one-tap sign-in.
+
+Added Multi-Language Support: Full localization for 12 official South African languages.
+
+Custom Notifications: Implemented WorkManager to allow users to schedule custom, ongoing (sticky) reminders for specific assignments.
+
+Real-world Resources: Populated the Bursary and Accommodation hubs with real-world data.
+
+AI Optimization: Separated Gemini API models to conserve tokens for the Chatbot while maintaining high accuracy for Image Scanners.
+
+Bug Fixes: Resolved memory leaks and lifecycle issues causing Toast spam during fragment navigation.
+
+👥 Team Members
+Rendani Muthathe — ST10449327
+
+Manelisi Vatsha — ST10447923
+
+Brandon Dlamini — ST10442379
+
+Ofentse Rakosa — ST10443425
+
+Rashokeng Molokomme — ST10265955
+
+🎥 Demonstration Video
