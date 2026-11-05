@@ -13,7 +13,9 @@ import com.campussync.app.models.ChatMessage
  * Adapter for the AI Chatbot RecyclerView.
  * Handles two view types: User messages and AI messages.
  */
-class ChatAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCallback()) {
+class ChatAdapter(
+    private val onDeleteClick: (ChatMessage) -> Unit
+) : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCallback()) {
 
     companion object {
         private const val VIEW_TYPE_USER = 1
@@ -48,6 +50,10 @@ class ChatAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCa
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) {
             binding.tvMessage.text = chatMessage.content
+            binding.root.setOnLongClickListener {
+                onDeleteClick(chatMessage)
+                true
+            }
         }
     }
 
@@ -55,12 +61,16 @@ class ChatAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatDiffCa
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatMessage: ChatMessage) {
             binding.tvMessage.text = chatMessage.content
+            binding.root.setOnLongClickListener {
+                onDeleteClick(chatMessage)
+                true
+            }
         }
     }
 
     class ChatDiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
         override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-            return oldItem.timestamp == newItem.timestamp && oldItem.content == newItem.content
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {

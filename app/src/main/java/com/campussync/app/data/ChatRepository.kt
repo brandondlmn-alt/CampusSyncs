@@ -26,8 +26,10 @@ class ChatRepository {
             val uid = getUserId()
             if (uid.isEmpty()) return Result.failure(Exception("User not logged in"))
 
+            val docRef = collection.document()
+            message.id = docRef.id
             message.studentId = uid
-            collection.add(message).await()
+            docRef.set(message).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Save failed", e)
@@ -43,21 +45,32 @@ class ChatRepository {
             val uid = getUserId()
             if (uid.isEmpty()) return Result.failure(Exception("User not logged in"))
 
-            // Query messages for the current user.
             val snapshot = collection
                 .whereEqualTo("studentId", uid)
                 .get()
                 .await()
 
             val history = snapshot.toObjects(ChatMessage::class.java)
-
-            // Sort history client-side by timestamp.
             val sortedHistory = history.sortedBy { it.timestamp }
 
             Log.d(TAG, "Loaded ${sortedHistory.size} messages from history")
             Result.success(sortedHistory)
         } catch (e: Exception) {
             Log.e(TAG, "History fetch failed", e)
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Deletes a specific message from Firestore.
+     */
+    suspend fun deleteMessage(messageId: String): Result<Unit> {
+        return try {
+            if (messageId.isEmpty()) return Result.failure(Exception("Invalid message ID"))
+            collection.document(messageId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Delete failed", e)
             Result.failure(e)
         }
     }

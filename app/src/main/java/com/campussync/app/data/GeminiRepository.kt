@@ -16,12 +16,10 @@ import kotlin.coroutines.suspendCoroutine
 
 /**
  * Repository for interacting with the Google Gemini AI API.
- * Supports text generation and vision-based data extraction for timetables and assessments.
  */
 class GeminiRepository {
 
     private val gson = Gson()
-    private val TAG = "GeminiRepository"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
@@ -31,19 +29,19 @@ class GeminiRepository {
     private val mediaType = "application/json; charset=utf-8".toMediaType()
 
     /**
-     * Generates a text response from the AI based on a given prompt.
+     * Generates a text response from the AI based on a given prompt using the Chat API key.
      */
     suspend fun generateContent(prompt: String): Result<String> {
-        val apiKey = getApiKey()
-        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
+        val apiKey = getChatApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("Chat API Key missing"))
 
-        val models = getModelList()
+        val models = getChatModelList()
 
         for (model in models) {
             val result = makeApiCall(model, apiKey, prompt, null, null)
 
             if (result.isSuccess) return result
-            
+
             val error = result.exceptionOrNull()?.message ?: ""
             if (!error.contains("404")) return result
         }
@@ -52,14 +50,14 @@ class GeminiRepository {
     }
 
     /**
-     * Extracts structured timetable information from an image.
+     * Extracts structured timetable information from an image using the Image API key.
      */
     suspend fun extractTimetableFromImage(
         imageBase64: String,
         mimeType: String
     ): Result<List<ScannedTimetableEntry>> {
-        val apiKey = getApiKey()
-        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
+        val apiKey = getImageApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("Image API Key missing"))
 
         val prompt = """
             You are an OCR and data extraction assistant. Analyze the uploaded timetable 
@@ -81,7 +79,7 @@ class GeminiRepository {
             - If no timetable is found, return an empty array [].
         """.trimIndent()
 
-        val models = getModelList()
+        val models = getImageModelList()
         for (model in models) {
             val result = makeApiCall(model, apiKey, prompt, imageBase64, mimeType)
             if (result.isSuccess) {
@@ -99,15 +97,15 @@ class GeminiRepository {
     }
 
     /**
-     * Extracts assessment deadlines from a PAS image, applying a year-based filter.
+     * Extracts assessment deadlines from a PAS image using the Image API key.
      */
     suspend fun extractAssessmentsFromImage(
         imageBase64: String,
         mimeType: String,
         programmeCodeFilter: String
     ): Result<List<ScannedAssessment>> {
-        val apiKey = getApiKey()
-        if (apiKey.isBlank()) return Result.failure(Exception("API Key missing"))
+        val apiKey = getImageApiKey()
+        if (apiKey.isBlank()) return Result.failure(Exception("Image API Key missing"))
 
         val filterInstruction = if (programmeCodeFilter.isNotBlank()) {
             """
@@ -136,7 +134,7 @@ class GeminiRepository {
             $filterInstruction
         """.trimIndent()
 
-        val models = getModelList()
+        val models = getImageModelList()
         for (model in models) {
             val result = makeApiCall(model, apiKey, prompt, imageBase64, mimeType)
             if (result.isSuccess) {
@@ -153,18 +151,34 @@ class GeminiRepository {
         return Result.failure(Exception("Assessment extraction failed."))
     }
 
-    private fun getApiKey(): String {
+    private fun getChatApiKey(): String {
         return BuildConfig.GEMINI_API_KEY.replace("\"", "").replace("'", "").trim()
     }
 
-    private fun getModelList(): List<String> {
+    private fun getImageApiKey(): String {
+        return BuildConfig.GEMINI_API_IMAGE_KEY.replace("\"", "").replace("'", "").trim()
+    }
+
+    /**
+     * Returns the lowest tier models to conserve tokens for chat.
+     * Using the 2026 models: 3.1 Flash-Lite (lowest) -> 3.5 Flash-Lite -> 3.6 Flash.
+     */
+    private fun getChatModelList(): List<String> {
         return listOf(
-            "gemini-3.5-flash",
+            "gemini-3.1-flash-lite",
             "gemini-3.5-flash-lite",
-            "gemini-2.5-flash",
-            "gemini-2.5-flash-lite",
-            "gemini-2.0-flash",
-            "gemini-1.5-flash"
+            "gemini-3.6-flash"
+        )
+    }
+
+    /**
+     * Returns powerful models required for accurate image processing.
+     * Using the 2026 models: 3.8 Flash -> 3.6 Flash.
+     */
+    private fun getImageModelList(): List<String> {
+        return listOf(
+            "gemini-3.8-flash",
+            "gemini-3.6-flash"
         )
     }
 
@@ -182,7 +196,7 @@ class GeminiRepository {
         val parts = mutableListOf<Map<String, Any>>(
             mapOf("text" to prompt)
         )
-        
+
         if (imageBase64 != null && mimeType != null) {
             parts.add(mapOf(
                 "inlineData" to mapOf(
@@ -195,7 +209,7 @@ class GeminiRepository {
         val requestMap = mutableMapOf<String, Any>(
             "contents" to listOf(mapOf("parts" to parts))
         )
-        
+
         if (imageBase64 != null) {
             requestMap["generationConfig"] = mapOf("responseMimeType" to "application/json")
         }
@@ -214,7 +228,7 @@ class GeminiRepository {
             override fun onFailure(call: Call, e: IOException) {
                 continuation.resume(Result.failure(e))
             }
-            
+
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {

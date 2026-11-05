@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.campussync.app.R
 import com.campussync.app.adapters.ModuleReviewAdapter
 import com.campussync.app.databinding.ActivityRegisterBinding
 import com.campussync.app.models.EnrolledModule
@@ -20,8 +19,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 /**
- * Activity for student registration.
- * Captures personal details and auto-assigns academic modules with a target of 2 classes per week.
+ * Activity for student registration and profile setup.
+ * Captures personal details and auto-assigns academic modules.
  */
 class RegisterActivity : AppCompatActivity() {
 
@@ -38,15 +37,45 @@ class RegisterActivity : AppCompatActivity() {
     private var course = ""
     private var year = 0
     private var semester = 0
+    private var isSsoSetup = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        isSsoSetup = intent.getBooleanExtra("IS_SSO_SETUP", false) || auth.currentUser != null
+
         setupUI()
+
+        if (isSsoSetup) {
+            prefillSsoUserData()
+        }
     }
 
+    /**
+     * Pre-fills the form with Google account details and hides password fields.
+     */
+    private fun prefillSsoUserData() {
+        val currentUser = auth.currentUser ?: return
+
+        email = currentUser.email ?: ""
+        binding.etEmail.setText(email)
+        binding.etEmail.isEnabled = false
+
+        val names = currentUser.displayName?.split(" ") ?: emptyList()
+        firstName = names.getOrNull(0) ?: ""
+        lastName = names.getOrNull(1) ?: ""
+        binding.etFirstName.setText(firstName)
+        binding.etLastName.setText(lastName)
+
+        binding.tilPassword.visibility = View.GONE
+        binding.tilConfirmPassword.visibility = View.GONE
+    }
+
+    /**
+     * Sets up the dropdowns, switches, and button listeners.
+     */
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationOnClickListener { handleBack() }
@@ -78,12 +107,12 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnRegister.setOnClickListener { performRegistration() }
     }
 
+    /**
+     * Validates the inputs for the first step of registration.
+     */
     private fun validateStep1() {
         firstName = binding.etFirstName.text.toString().trim()
         lastName = binding.etLastName.text.toString().trim()
-        email = binding.etEmail.text.toString().trim()
-        password = binding.etPassword.text.toString().trim()
-        val confirm = binding.etConfirmPassword.text.toString().trim()
 
         if (firstName.isEmpty()) {
             binding.tilFirstName.error = "Required"
@@ -95,24 +124,33 @@ class RegisterActivity : AppCompatActivity() {
             return
         } else binding.tilLastName.error = null
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.error = "Invalid email format"
-            return
-        } else binding.tilEmail.error = null
+        if (!isSsoSetup) {
+            email = binding.etEmail.text.toString().trim()
+            password = binding.etPassword.text.toString().trim()
+            val confirm = binding.etConfirmPassword.text.toString().trim()
 
-        if (password.length < 6) {
-            binding.tilPassword.error = "Minimum 6 characters"
-            return
-        } else binding.tilPassword.error = null
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.tilEmail.error = "Invalid email format"
+                return
+            } else binding.tilEmail.error = null
 
-        if (password != confirm) {
-            binding.tilConfirmPassword.error = "Passwords do not match"
-            return
-        } else binding.tilConfirmPassword.error = null
+            if (password.length < 6) {
+                binding.tilPassword.error = "Minimum 6 characters"
+                return
+            } else binding.tilPassword.error = null
+
+            if (password != confirm) {
+                binding.tilConfirmPassword.error = "Passwords do not match"
+                return
+            } else binding.tilConfirmPassword.error = null
+        }
 
         moveToStep(1)
     }
 
+    /**
+     * Validates the inputs for the second step of registration.
+     */
     private fun validateStep2() {
         campus = binding.actvCampus.text.toString()
         course = binding.actvCourse.text.toString()
@@ -131,6 +169,9 @@ class RegisterActivity : AppCompatActivity() {
         moveToStep(2)
     }
 
+    /**
+     * Populates the review screen with the user's selected data.
+     */
     private fun setupReviewStep() {
         binding.tvReviewName.text = "Name: $firstName $lastName"
         binding.tvReviewEmail.text = "Email: $email"
@@ -143,16 +184,22 @@ class RegisterActivity : AppCompatActivity() {
 
         val catalogModules = ModuleCatalog.getModulesFor(year, semester)
         val modules = catalogModules.map { EnrolledModule(it.code, it.name) }
-        
+
         binding.rvModuleReview.layoutManager = LinearLayoutManager(this)
         binding.rvModuleReview.adapter = ModuleReviewAdapter(modules)
     }
 
+    /**
+     * Changes the visible step in the registration flow.
+     */
     private fun moveToStep(index: Int) {
         binding.viewFlipper.displayedChild = index
         binding.registrationProgress.progress = index + 1
     }
 
+    /**
+     * Handles the back navigation logic through the steps.
+     */
     private fun handleBack() {
         when (binding.viewFlipper.displayedChild) {
             0 -> finish()
@@ -161,13 +208,20 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Executes registration or updates the profile if in SSO setup mode.
+     */
     private fun performRegistration() {
         setLoading(true)
         lifecycleScope.launch {
             try {
-                val result = auth.createUserWithEmailAndPassword(email, password).await()
-                val userId = result.user?.uid ?: throw Exception("Auth failed")
-                saveUserAndModulesToFirestore(userId)
+                if (isSsoSetup && auth.currentUser != null) {
+                    saveUserAndModulesToFirestore(auth.currentUser!!.uid)
+                } else {
+                    val result = auth.createUserWithEmailAndPassword(email, password).await()
+                    val userId = result.user?.uid ?: throw Exception("Auth failed")
+                    saveUserAndModulesToFirestore(userId)
+                }
             } catch (e: Exception) {
                 setLoading(false)
                 Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_LONG).show()
@@ -175,12 +229,14 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Saves the user's profile and assigned modules to Firestore.
+     */
     private fun saveUserAndModulesToFirestore(userId: String) {
         lifecycleScope.launch {
             try {
                 val batch = db.batch()
 
-                // 1. Assign modules to the individual 'modules' collection with target = 2
                 val catalogModules = if (isRosebank) {
                     ModuleCatalog.getModulesFor(year, semester)
                 } else emptyList()
@@ -192,12 +248,11 @@ class RegisterActivity : AppCompatActivity() {
                         "studentId" to userId,
                         "code" to catalogModule.code,
                         "name" to catalogModule.name,
-                        "targetClassesPerWeek" to 2 // As requested: target is 2
+                        "targetClassesPerWeek" to 2
                     )
                     batch.set(moduleDocRef, moduleData)
                 }
 
-                // 2. Save user profile
                 val userDocRef = db.collection("users").document(userId)
                 val userData = hashMapOf(
                     "uid" to userId,
@@ -227,6 +282,9 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Toggles the loading state of the UI components.
+     */
     private fun setLoading(isLoading: Boolean) {
         binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.btnRegister.isEnabled = !isLoading
