@@ -41,7 +41,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upcoming Class"
+                    android:text="@string/dash_upcoming_class"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/primary_blue" />
 
@@ -91,7 +91,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Current Avg"
+                        android:text="@string/dash_current_avg"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="@color/text_secondary" />
 
@@ -127,7 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Budget Left"
+                        android:text="@string/dash_budget_left"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="@color/text_secondary" />
 
@@ -162,7 +162,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upcoming Deadlines"
+                    android:text="@string/dash_upcoming_deadlines"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/primary_blue" />
 
@@ -171,7 +171,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="No upcoming deadlines 🎉"
+                    android:text="@string/dash_no_deadlines"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="@color/text_main" />
             </LinearLayout>
@@ -197,7 +197,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AI Study Assistant"
+                    android:text="@string/dash_ai_title"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/primary_blue"
                     android:textStyle="bold" />
@@ -207,7 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Tap the button to get a study tip!"
+                    android:text="@string/dash_ai_desc"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="@color/text_main" />
 
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="12dp"
-                    android:text="Get Study Tip"
+                    android:text="@string/dash_btn_tip"
                     app:cornerRadius="50dp" />
 
                 <ProgressBar
@@ -236,7 +236,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
-            android:text="Recent Assessments"
+            android:text="@string/dash_recent_assessments"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
             android:textColor="@color/text_main"
             android:textStyle="bold" />

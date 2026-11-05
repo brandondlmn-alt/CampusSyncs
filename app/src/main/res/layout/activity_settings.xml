@@ -23,7 +23,7 @@
             android:background="@drawable/bg_toolbar_rounded"
             app:navigationIcon="@drawable/abc_ic_ab_back_material"
             app:navigationIconTint="@android:color/white"
-            app:title="Settings"
+            app:title="@string/title_settings"
             app:titleCentered="true"
             app:titleTextColor="@android:color/white" />
 
@@ -40,6 +40,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <!-- Profile Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="Profile Information"
+                        android:text="@string/settings_profile_info"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="@color/primary_blue"
                         android:textStyle="bold" />
@@ -69,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:hint="First Name"
+                        android:hint="@string/settings_first_name"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -87,7 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:hint="Last Name"
+                        android:hint="@string/settings_last_name"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -105,7 +106,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:hint="Institution"
+                        android:hint="@string/settings_institution"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -123,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:hint="Course"
+                        android:hint="@string/settings_course"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -141,7 +142,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="24dp"
-                        android:hint="Year of Study"
+                        android:hint="@string/settings_year"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -158,10 +159,11 @@
                         style="@style/Widget.CampusSync.Button.Pill"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="Update Profile" />
+                        android:text="@string/settings_btn_update" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Academic Setup Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,7 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="Academic Setup"
+                        android:text="@string/settings_academic_setup"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="@color/primary_blue"
                         android:textStyle="bold" />
@@ -190,11 +192,12 @@
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="Manage Modules"
+                        android:text="@string/settings_btn_manage_modules"
                         app:cornerRadius="50dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Preferences Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="Preferences"
+                        android:text="@string/settings_preferences"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="@color/primary_blue"
                         android:textStyle="bold" />
@@ -224,7 +227,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
-                        android:hint="Language"
+                        android:hint="@string/settings_language"
                         app:boxCornerRadiusBottomEnd="20dp"
                         app:boxCornerRadiusBottomStart="20dp"
                         app:boxCornerRadiusTopEnd="20dp"
@@ -241,11 +244,75 @@
                         android:id="@+id/switchNotifications"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Enable Notifications"
+                        android:text="@string/settings_enable_notifications"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilReminderDays"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="@string/settings_remind_days"
+                        app:boxCornerRadiusBottomEnd="20dp"
+                        app:boxCornerRadiusBottomStart="20dp"
+                        app:boxCornerRadiusTopEnd="20dp"
+                        app:boxCornerRadiusTopStart="20dp">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/actvReminderDays"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Notification Testing Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/settings_notifications_title"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="@color/primary_blue"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/settings_test_notification_desc"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/text_secondary" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTestNotification"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="@string/settings_test_notification"
+                        app:cornerRadius="50dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Security Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -264,7 +331,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="Security"
+                        android:text="@string/settings_security"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="@color/primary_blue"
                         android:textStyle="bold" />
@@ -274,7 +341,7 @@
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="Change Password"
+                        android:text="@string/settings_btn_change_password"
                         app:cornerRadius="50dp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -283,16 +350,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
-                        android:text="Logout"
+                        android:text="@string/action_logout"
                         android:textColor="@color/accent_red"
                         app:cornerRadius="50dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Footer Info -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CampusSync v1.5.0"
+                android:text="@string/settings_version"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:textColor="@color/text_secondary" />
@@ -301,7 +369,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="Created by: Team CampusSync"
+                android:text="@string/settings_created_by"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:textColor="@color/text_secondary" />

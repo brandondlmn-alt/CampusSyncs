@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overall Weighted Average"
+                android:text="@string/marks_avg"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textColor="@color/text_secondary" />
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="No marks recorded yet.\nTap + to add one."
+            android:text="@string/marks_empty"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:textColor="@color/text_secondary" />
@@ -99,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:contentDescription="Add mark"
+        android:contentDescription="@string/desc_add_mark"
         app:backgroundTint="@color/primary_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

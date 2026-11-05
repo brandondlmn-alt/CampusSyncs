@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Idashbhodi</string>
+    <string name="title_timetable">Ithebula yesikhathi</string>
+    <string name="title_budget">Ibhajethi</string>
+    <string name="title_assistant">Umsizi we-AI</string>
+    <string name="title_marks">Amamaki</string>
+    <string name="title_resources">Izinsiza</string>
+    <string name="title_settings">Izilungiselelo</string>
+    <string name="action_logout">Phuma</string>
+
+    <string name="login_welcome">Wamukelekile goduka</string>
+    <string name="login_subtitle">Ngema ukuthi uqhubeke ne-CampusSync</string>
+    <string name="login_forgot_password">Ukhohlwe iphasiwedi?</string>
+    <string name="btn_login">Ngena</string>
+    <string name="login_or">GOBA</string>
+    <string name="btn_google">Qhubeka nge-Google</string>
+    <string name="login_no_account">Awunawo i-akhawunti? </string>
+
+    <string name="reg_personal_details">Imininingwana yomuntu siqu</string>
+    <string name="hint_first_name">Ibizo lokuthoma</string>
+    <string name="hint_surname">Isibongo</string>
+    <string name="step_account">I-akhawunti</string>
+    <string name="step_institution">Isikhungo</string>
+    <string name="step_review">Buyekeza</string>
+    <string name="btn_next">Okulandelako</string>
+    <string name="btn_register">Bhalisa</string>
+    <string name="hint_email">Ikheli le-imeyili</string>
+    <string name="hint_password">Iphasiwedi</string>
+    <string name="hint_confirm_password">Qinisekisa Iphasiwedi</string>
+    <string name="hint_campus">Indawo yekhampasi</string>
+    <string name="hint_course">Isifundo</string>
+    <string name="hint_year">Unyaka wezifundo</string>
+    <string name="hint_semester">Isemesta yamanje</string>
+    <string name="is_rosebank_student">Ungumfundi weRosebank International?</string>
+    <string name="optimization_note">I-CampusSync ilungiselelwe abafundi beRosebank International nje.</string>
+    <string name="manual_modules_note">Ungafaka amamojula godwana kusikrini seThebula yesikhathi.</string>
+    <string name="review_header">Buyekeza Imininingwana Yakho</string>
+    <string name="review_name_label">Ibizo: </string>
+    <string name="review_email_label">I-imeyili: </string>
+    <string name="review_campus_label">Ikhampasi: </string>
+    <string name="review_course_label">Isifundo: </string>
+    <string name="review_year_label">Unyaka: </string>
+    <string name="review_semester_label">Isemesta: </string>
+    <string name="review_modules_header">Amamojula wakho wonyaka %1$d, isemesta %2$d:</string>
+    <string name="review_modules_note">Lawu mamojula azokwengezwa kuthebula lakho yesikhathi.</string>
+
+    <string name="dash_upcoming_class">Ikilasi elizako</string>
+    <string name="dash_current_avg">Isilinganiso samanje</string>
+    <string name="dash_budget_left">Imali eseleyo</string>
+    <string name="dash_upcoming_deadlines">Imihla yokugcina ezayo</string>
+    <string name="dash_no_deadlines">Akukho mihla yokugcina ezayo 🎉</string>
+    <string name="dash_ai_title">Umsizi we-AI</string>
+    <string name="dash_ai_desc">Thepha ibhathini ukuthola ithiphu yokufunda!</string>
+    <string name="dash_btn_tip">Thola ithiphu</string>
+    <string name="dash_recent_assessments">Ukuhlolwa kwamanje</string>
+
+    <string name="timetable_empty">Akukho zifundo ezihleliweko.\nThepha + ukufaka enye.</string>
+    <string name="desc_add_class">Faka ikilasi</string>
+
+    <string name="budget_monthly">Ibhajethi yenyanga</string>
+    <string name="budget_btn_set">Beka isabelo</string>
+    <string name="budget_empty">Akukho zindleko kule nyanga.\nThepha + ukufaka eyinye.</string>
+    <string name="desc_add_expense">Faka iindleko</string>
+
+    <string name="marks_avg">Isilinganiso sisonkhe</string>
+    <string name="marks_empty">Akukho mamaki arhekhodiweko.\nThepha + ukufaka elinye.</string>
+    <string name="desc_add_mark">Faka amamaki</string>
+
+    <string name="scan_timetable_title">Skena Ithebula yesikhathi</string>
+    <string name="choose_from_gallery">Khetha kugalari</string>
+    <string name="scanning_message">Ihlaziya ithebula lakho yesikhathi...</string>
+    <string name="scanning_upload_title">Layisha Isithombe sethebula</string>
+    <string name="scanning_upload_desc">Sizokhipha amamojula, izikhathi, neendawo ukuze uzibuyekeze.</string>
+    <string name="review_entries_title">Buyekeza Okufakiweko</string>
+    <string name="review_entries_header">Kutholwe okufakiweko okungu-%1$d. Thepha ukuze uhlele ngaphambi kokugcina.</string>
+    <string name="review_save_note">Kuzogcinwa kuphela okufakiweko okunekhodi yemojula.</string>
+    <string name="save_all">Gcina Konke Kuthebula</string>
+    <string name="rescan">Skena futhi</string>
+    <string name="assessments_title">Ukuhlolwa</string>
+    <string name="scan_pas">Skena i-PAS</string>
+    <string name="scanner_assessment_title">Skena Ihlelo Lokuhlolwa</string>
+    <string name="review_assessments_title">Buyekeza Ukuhlolwa</string>
+    <string name="review_assessments_header">Kutholwe ukuhlolwa okungu-%1$d. Thepha ukuze uhlele.</string>
+    <string name="save_all_assessments">Gcina Konke Ukuhlolwa</string>
+    <string name="add_assessment_manually">Engeza Ukuhlolwa Ngesandla</string>
+    <string name="no_assessments">Akukho kuhlolwa okwamanje. Skena i-PAS yakho namkha wengeze ngesandla.</string>
+    <string name="filter_all">Konke</string>
+    <string name="filter_upcoming">Okuzako</string>
+    <string name="filter_completed">Okuqediweko</string>
+    <string name="filter_past">Okwedlulileko</string>
+    <string name="requires_turnitin">Idinga i-Turnitin</string>
+    <string name="scanning_upload_title_pas">Layisha Isithombe sakho se-PAS</string>
+    <string name="scanning_upload_desc_pas">Sizokhipha izinsuku zokugcina zokuhlolwa.</string>
+    <string name="hint_module_code">Ikhodi yemojula</string>
+    <string name="hint_module_name">Igama lemojula</string>
+    <string name="hint_day_of_week">Usuku lweveke</string>
+    <string name="hint_start_time">Isikhathi sokuqala</string>
+    <string name="hint_end_time">Isikhathi sokuphela</string>
+    <string name="hint_venue">Indawo</string>
+    <string name="desc_delete_entry">Susa okufakiweko</string>
+
+    <string name="settings_profile_info">Imininingwana yomsebenzisi</string>
+    <string name="settings_first_name">Ibizo lokuthoma</string>
+    <string name="settings_last_name">Ibizo lokugcina</string>
+    <string name="settings_institution">Isikhungo</string>
+    <string name="settings_course">Isifundo</string>
+    <string name="settings_year">Unyaka wezifundo</string>
+    <string name="settings_btn_update">Hlaziya iphrofayela</string>
+    <string name="settings_academic_setup">Ukuhlelwa kwezefundo</string>
+    <string name="settings_btn_manage_modules">Lawula amamojula</string>
+    <string name="settings_preferences">Okukhethwako</string>
+    <string name="settings_language">Ilimi</string>
+    <string name="settings_enable_notifications">Vumela iZaziso</string>
+    <string name="settings_security">Ukuphepha</string>
+    <string name="settings_btn_change_password">Tjhugulula iphasiwedi</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">Yenziwe yi: Team CampusSync</string>
+
+    <string name="error_image_too_large">Isithombe sikhulu kakhulu. Khetha esincani.</string>
+    <string name="error_no_entries">Azikho izingeno zethembula ezitholiweko. Zama isithombe esicacileko.</string>
+    <string name="error_network">Hlola uxhumano lwakho lwe-inthanethi.</string>
+    <string name="error_rate_limit">Izicelo zininzi kakhulu. Linda umzuzu bese uzama futhi.</string>
+    <string name="error_auth">Ukuqinisekiswa kwe-AI kuhlulekile. Xhumana nokusekelwa.</string>
+    <string name="error_generic">Ayikwazanga ukucubungula isithombe. Zama futhi.</string>
+    <string name="entries_saved">Kugcinwe okufakiweko okungu-%1$d ngempumelelo</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Ngikhumbuze ngaphambi komhla wokugcina</string>
+    <string name="remind_1_day">Ilanga loku-1 ngaphambi</string>
+    <string name="remind_2_days">Amalanga ama-2 ngaphambi</string>
+    <string name="remind_3_days">Amalanga ama-3 ngaphambi</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Izilungiselelo Zezaziso</string>
+    <string name="settings_test_notification">Rhumela Isaziso Sokuhlola</string>
+    <string name="settings_test_notification_desc">Thepha lapha ukuze ubone ukuthi izaziso zakho zomhla wokugcina zizokhangeleka njani.</string>
+
+</resources>

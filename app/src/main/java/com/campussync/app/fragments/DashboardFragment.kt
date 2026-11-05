@@ -19,6 +19,7 @@ import com.campussync.app.models.TimetableEntry
 import com.campussync.app.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -35,7 +36,7 @@ class DashboardFragment : Fragment() {
     private val budgetRepo = BudgetRepository()
     private val geminiRepo = GeminiRepository()
     private val db = FirebaseFirestore.getInstance()
-    
+
     private val markAdapter = MarkAdapter(onEditClick = {}, onDeleteClick = {})
     private val TAG = "DashboardFragment"
     private var currentAverage = 0.0
@@ -77,9 +78,11 @@ class DashboardFragment : Fragment() {
                             updateUI(data)
                         }
                     }
+                } catch (e: CancellationException) {
+                    // Ignore normal navigation cancellation
                 } catch (e: Exception) {
                     Log.e(TAG, "Error collecting dashboard data", e)
-                    if (_binding != null) {
+                    if (isAdded && _binding != null) {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(), "Failed to load dashboard data.", Toast.LENGTH_SHORT).show()
                     }
@@ -106,6 +109,8 @@ class DashboardFragment : Fragment() {
                         binding.tvBudgetRemaining.text = String.format(Locale.getDefault(), "R %.0f", (allowance - spent))
                     }
                 }
+            } catch (e: CancellationException) {
+                // Ignore
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating budget UI", e)
             }
@@ -126,7 +131,7 @@ class DashboardFragment : Fragment() {
             .whereEqualTo("studentId", uid)
             .addSnapshotListener { snapshot, error ->
                 if (_binding == null) return@addSnapshotListener
-                
+
                 if (error != null) {
                     Log.e(TAG, "Assessment listener error", error)
                     return@addSnapshotListener
@@ -137,7 +142,7 @@ class DashboardFragment : Fragment() {
                     .filter { !it.completed && it.dueDate >= today }
                     .sortedBy { it.dueDate }
                     .take(3)
-                
+
                 updateDeadlinesUI(upcoming)
             }
     }
@@ -173,12 +178,14 @@ class DashboardFragment : Fragment() {
                         setAiLoading(false)
                         result.fold(
                             onSuccess = { tip -> binding.tvAiResponse.text = tip.trim() },
-                            onFailure = { e -> 
+                            onFailure = { e ->
                                 binding.tvAiResponse.text = "Error generating tip"
                                 Log.e(TAG, "AI Error", e)
                             }
                         )
                     }
+                } catch (e: CancellationException) {
+                    // Ignore
                 } catch (e: Exception) {
                     if (_binding != null) setAiLoading(false)
                     Log.e(TAG, "AI Exception", e)

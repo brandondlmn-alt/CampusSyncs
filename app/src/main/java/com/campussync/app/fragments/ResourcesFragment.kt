@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 
 /**
  * Fragment to display academic resources: Bursaries and Student Accommodation.
- * Read-only for students. Includes search/filtering functionality.
  */
 class ResourcesFragment : Fragment() {
 
@@ -98,6 +97,7 @@ class ResourcesFragment : Fragment() {
                 onSuccess = { bursaries ->
                     allBursaries = bursaries
                     bursaryAdapter.submitList(bursaries)
+                    updateEmptyState()
                 },
                 onFailure = { e ->
                     Log.e(TAG, "Failed to load bursaries", e)
@@ -110,30 +110,30 @@ class ResourcesFragment : Fragment() {
                 onSuccess = { accommodation ->
                     allAccommodation = accommodation
                     accommodationAdapter.submitList(accommodation)
+                    updateEmptyState()
                 },
                 onFailure = { e ->
                     Log.e(TAG, "Failed to load accommodation", e)
                 }
             )
-            
+
             binding.progressBar.visibility = View.GONE
-            updateEmptyState()
         }
     }
 
     private fun performSearch(query: String) {
         val filteredQuery = query.lowercase().trim()
-        
+
         if (binding.tabLayout.selectedTabPosition == 0) {
-            val filtered = allBursaries.filter { 
-                it.name.lowercase().contains(filteredQuery) || 
-                it.provider.lowercase().contains(filteredQuery) 
+            val filtered = allBursaries.filter {
+                it.name.lowercase().contains(filteredQuery) ||
+                        it.provider.lowercase().contains(filteredQuery)
             }
             bursaryAdapter.submitList(filtered)
         } else {
-            val filtered = allAccommodation.filter { 
-                it.name.lowercase().contains(filteredQuery) || 
-                it.location.lowercase().contains(filteredQuery) 
+            val filtered = allAccommodation.filter {
+                it.name.lowercase().contains(filteredQuery) ||
+                        it.location.lowercase().contains(filteredQuery)
             }
             accommodationAdapter.submitList(filtered)
         }

@@ -16,6 +16,7 @@ data class User(
     var enrolledModules: List<Map<String, String>> = emptyList(),
     var language: String = "en",
     var notificationsEnabled: Boolean = true,
+    var notificationDaysBefore: Int = 1, // NEW: Default is 1 day before
     var createdAt: Long = 0L,
     var updatedAt: Long = 0L
 )

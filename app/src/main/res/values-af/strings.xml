@@ -1,0 +1,133 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Tuisblad</string>
+    <string name="title_timetable">Rooster</string>
+    <string name="title_budget">Begroting</string>
+    <string name="title_assistant">KI-assistent</string>
+    <string name="title_marks">Punte</string>
+    <string name="title_resources">Hulpbronne</string>
+    <string name="title_settings">Instellings</string>
+    <string name="action_logout">Teken uit</string>
+
+    <string name="login_welcome">Welkom Terug</string>
+    <string name="login_subtitle">Teken in om voort te gaan na CampusSync</string>
+    <string name="login_forgot_password">Wagwoord vergeet?</string>
+    <string name="btn_login">Teken in</string>
+    <string name="login_or">OF</string>
+    <string name="btn_google">Gaan voort met Google</string>
+    <string name="login_no_account">Het jy nie \'n rekening nie? </string>
+
+    <string name="reg_personal_details">Persoonlike Besonderhede</string>
+    <string name="hint_first_name">Voornaam</string>
+    <string name="hint_surname">Van</string>
+    <string name="step_account">Rekening</string>
+    <string name="step_institution">Instelling</string>
+    <string name="step_review">Hersien</string>
+    <string name="btn_next">Volgende</string>
+    <string name="btn_register">Registreer</string>
+    <string name="hint_email">E-posadres</string>
+    <string name="hint_password">Wagwoord</string>
+    <string name="hint_confirm_password">Bevestig Wagwoord</string>
+    <string name="hint_campus">Kampusligging</string>
+    <string name="hint_course">Kursus</string>
+    <string name="hint_year">Jaar van Studie</string>
+    <string name="hint_semester">Huidige Semester</string>
+    <string name="is_rosebank_student">Is jy \'n Rosebank International-student?</string>
+    <string name="optimization_note">CampusSync is tans geoptimaliseer vir Rosebank International-studente.</string>
+    <string name="manual_modules_note">Jy kan later modules byvoeg in die Rooster-skerm.</string>
+    <string name="review_header">Hersien jou besonderhede</string>
+    <string name="review_name_label">Naam: </string>
+    <string name="review_email_label">E-pos: </string>
+    <string name="review_campus_label">Kampus: </string>
+    <string name="review_course_label">Kursus: </string>
+    <string name="review_year_label">Jaar: </string>
+    <string name="review_semester_label">Semester: </string>
+    <string name="review_modules_header">Jou modules vir Jaar %1$d, Semester %2$d:</string>
+    <string name="review_modules_note">Hierdie modules sal by jou rooster gevoeg word.</string>
+
+    <string name="dash_upcoming_class">Opkomende Klas</string>
+    <string name="dash_current_avg">Huidige Gemiddeld</string>
+    <string name="dash_budget_left">Begroting Oor</string>
+    <string name="dash_upcoming_deadlines">Opkomende Spertye</string>
+    <string name="dash_no_deadlines">Geen opkomende sperdatums 🎉</string>
+    <string name="dash_ai_title">KI-studiehulp</string>
+    <string name="dash_ai_desc">Tik die knoppie om \'n studiewenk te kry!</string>
+    <string name="dash_btn_tip">Kry Studiewenk</string>
+    <string name="dash_recent_assessments">Onlangse Assesserings</string>
+
+    <string name="timetable_empty">Nog geen klasse geskeduleer nie.\nTik + om een by te voeg.</string>
+    <string name="desc_add_class">Voeg klas by</string>
+
+    <string name="budget_monthly">Maandelikse Begroting</string>
+    <string name="budget_btn_set">Stel Toelae</string>
+    <string name="budget_empty">Geen uitgawes hierdie maand nie.\nTik + om een by te voeg.</string>
+    <string name="desc_add_expense">Voeg uitgawe by</string>
+
+    <string name="marks_avg">Algehele Geweegde Gemiddelde</string>
+    <string name="marks_empty">Nog geen punte aangeteken nie.\nTik + om een by te voeg.</string>
+    <string name="desc_add_mark">Voeg punt by</string>
+
+    <string name="scan_timetable_title">Skandeer Rooster</string>
+    <string name="choose_from_gallery">Kies uit Galery</string>
+    <string name="scanning_message">Ontleed jou rooster...</string>
+    <string name="scanning_upload_title">Laai Rooster Foto Op</string>
+    <string name="scanning_upload_desc">Ons sal die modules, tye en lokale onttrek vir jou om te hersien.</string>
+    <string name="review_entries_title">Hersien Inskrywings</string>
+    <string name="review_entries_header">%1$d inskrywings gevind. Tik om te wysig voor stoor.</string>
+    <string name="review_save_note">Slegs inskrywings met \'n modulekode sal gestoor word.</string>
+    <string name="save_all">Stoor Alles na Rooster</string>
+    <string name="rescan">Skandeer weer</string>
+    <string name="assessments_title">Assesserings</string>
+    <string name="scan_pas">Skandeer PAS</string>
+    <string name="scanner_assessment_title">Skandeer Assesseringskedule</string>
+    <string name="review_assessments_title">Hersien Assesserings</string>
+    <string name="review_assessments_header">%1$d assesserings gevind. Tik om te wysig voor stoor.</string>
+    <string name="save_all_assessments">Stoor Alle Assesserings</string>
+    <string name="add_assessment_manually">Voeg Assessering Handmatig By</string>
+    <string name="no_assessments">Nog geen assesserings nie. Skandeer jou PAS of voeg handmatig by.</string>
+    <string name="filter_all">Alles</string>
+    <string name="filter_upcoming">Opkomende</string>
+    <string name="filter_completed">Voltooide</string>
+    <string name="filter_past">Verlede</string>
+    <string name="requires_turnitin">Vereis Turnitin</string>
+    <string name="scanning_upload_title_pas">Laai jou PAS Foto Op</string>
+    <string name="scanning_upload_desc_pas">Ons sal die assesserings sperdatums vir jou onttrek.</string>
+    <string name="hint_module_code">Modulekode</string>
+    <string name="hint_module_name">Modulenaam</string>
+    <string name="hint_day_of_week">Dag van die Week</string>
+    <string name="hint_start_time">Begintyd</string>
+    <string name="hint_end_time">Eindtyd</string>
+    <string name="hint_venue">Lokaal</string>
+    <string name="desc_delete_entry">Verwyder inskrywing</string>
+
+    <string name="settings_profile_info">Profiel Inligting</string>
+    <string name="settings_first_name">Voornaam</string>
+    <string name="settings_last_name">Van</string>
+    <string name="settings_institution">Instelling</string>
+    <string name="settings_course">Kursus</string>
+    <string name="settings_year">Jaar van Studie</string>
+    <string name="settings_btn_update">Dateer Profiel Op</string>
+    <string name="settings_academic_setup">Akademiese Opstelling</string>
+    <string name="settings_btn_manage_modules">Bestuur Modules</string>
+    <string name="settings_preferences">Voorkeure</string>
+    <string name="settings_language">Taal</string>
+    <string name="settings_enable_notifications">Aktiveer Kennisgewings</string>
+    <string name="settings_security">Sekuriteit</string>
+    <string name="settings_btn_change_password">Verander Wagwoord</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">Geskep deur: Team CampusSync</string>
+
+    <string name="error_image_too_large">Beeld te groot. Kies \'n kleiner beeld.</string>
+    <string name="error_no_entries">Geen roosterinskrywings bespeur nie. Probeer \'n duideliker beeld.</string>
+    <string name="error_network">Kontroleer jou internetverbinding.</string>
+    <string name="error_rate_limit">Te veel versoeke. Wag \'n minuut en probeer weer.</string>
+    <string name="error_auth">KI-verifikasie het misluk. Kontak ondersteuning.</string>
+    <string name="error_generic">Kon nie die beeld verwerk nie. Probeer weer.</string>
+    <string name="entries_saved">%1$d inskrywings suksesvol gestoor</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Herinner my voor sperdatum</string>
+    <string name="remind_1_day">1 Dag voor</string>
+    <string name="remind_2_days">2 Dae voor</string>
+    <string name="remind_3_days">3 Dae voor</string>
+</resources>

@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Dashibodo</string>
+    <string name="title_timetable">Nongonoko wa nkarhi</string>
+    <string name="title_budget">Mpimanyeto wa mali</string>
+    <string name="title_assistant">Mpfuni wa AI</string>
+    <string name="title_marks">Maraka</string>
+    <string name="title_resources">Switirhisiwa</string>
+    <string name="title_settings">Milawu</string>
+    <string name="action_logout">Huma</string>
+
+    <string name="login_welcome">Amukeriwile nakambe</string>
+    <string name="login_subtitle">Nghena leswaku u ya emahlweni na CampusSync</string>
+    <string name="login_forgot_password">U rivalile phasiwedi?</string>
+    <string name="btn_login">Nghena</string>
+    <string name="login_or">KUMBE</string>
+    <string name="btn_google">Yana emahlweni na Google</string>
+    <string name="login_no_account">A wu na akhawunti? </string>
+
+    <string name="reg_personal_details">Vuxokoxoko bya munhu</string>
+    <string name="hint_first_name">Vito ro sungula</string>
+    <string name="hint_surname">Xivongo</string>
+    <string name="step_account">Akhawunti</string>
+    <string name="step_institution">Xiyenge</string>
+    <string name="step_review">Kambisisa</string>
+    <string name="btn_next">Leyi landzelaka</string>
+    <string name="btn_register">Tsarisa</string>
+    <string name="hint_email">Adirese ya imeyili</string>
+    <string name="hint_password">Phasiwedi</string>
+    <string name="hint_confirm_password">Tiyisisa Phasiwedi</string>
+    <string name="hint_campus">Ndhawu ya khamphasi</string>
+    <string name="hint_course">Khozi</string>
+    <string name="hint_year">Lembe ra dyondzo</string>
+    <string name="hint_semester">Semesta ya sweswi</string>
+    <string name="is_rosebank_student">Xana u mudyondzi wa Rosebank International?</string>
+    <string name="optimization_note">CampusSync yi lulamiseriwe mudyondzi wa Rosebank International.</string>
+    <string name="manual_modules_note">U nga engetela timodyulu endzhaku ka xikirini xa Nongonoko wa nkarhi.</string>
+    <string name="review_header">Kambisisa Vuxokoxoko Bya Wena</string>
+    <string name="review_name_label">Vito: </string>
+    <string name="review_email_label">Imeyili: </string>
+    <string name="review_campus_label">Khamphasi: </string>
+    <string name="review_course_label">Khozi: </string>
+    <string name="review_year_label">Lembe: </string>
+    <string name="review_semester_label">Semesta: </string>
+    <string name="review_modules_header">Timodyulu ta wena ta Lembe %1$d, Semesta %2$d:</string>
+    <string name="review_modules_note">Timodyulu leti ti ta engeteriwa eka nongonoko wa wena wa nkarhi.</string>
+
+    <string name="dash_upcoming_class">Kilasi leri taka</string>
+    <string name="dash_current_avg">Mpimanyeto wa sweswi</string>
+    <string name="dash_budget_left">Mali leyi saleke</string>
+    <string name="dash_upcoming_deadlines">Masiku yo hetelela lama taka</string>
+    <string name="dash_no_deadlines">A ku na masiku yo hetelela lama taka 🎉</string>
+    <string name="dash_ai_title">Mpfuni wa AI</string>
+    <string name="dash_ai_desc">Tlaya bhatani ku kuma xitsundzuxo xo dyondza!</string>
+    <string name="dash_btn_tip">Kuma xitsundzuxo</string>
+    <string name="dash_recent_assessments">Milingo ya sweswi</string>
+
+    <string name="timetable_empty">A ku na makilasi lama lulamisiweke.\nTlaya + ku engetela rin\'we.</string>
+    <string name="desc_add_class">Engetela kilasi</string>
+
+    <string name="budget_monthly">Mpimanyeto wa n\'hweti</string>
+    <string name="budget_btn_set">Veka ndzayo</string>
+    <string name="budget_empty">A ku na ndleko n\'hwetini leyi.\nTlaya + ku engetela yin\'we.</string>
+    <string name="desc_add_expense">Engetela ndleko</string>
+
+    <string name="marks_avg">Mpimanyeto lowu pfuneke</string>
+    <string name="marks_empty">A ku na maraka lama tsariweke.\nTlaya + ku engetela rin\'we.</string>
+    <string name="desc_add_mark">Engetela maraka</string>
+
+    <string name="scan_timetable_title">Skena Nongonoko</string>
+    <string name="choose_from_gallery">Hlawula ku suka eka galari</string>
+    <string name="scanning_message">Yi hlaya nongonoko wa wena...</string>
+    <string name="scanning_upload_title">Layisela Xifaniso xa Nongonoko</string>
+    <string name="scanning_upload_desc">Hi ta humesa timodyulu, nkarhi na ndhawu leswaku u ta kambisisa.</string>
+    <string name="review_entries_title">Kambisisa Leswi Nghenisiweke</string>
+    <string name="review_entries_header">Ku kumekile leswi nghenisiweke leswi %1$d. Thepha leswaku u hlela ku nga si hlayisa.</string>
+    <string name="review_save_note">Ku ta hlayisiwa ntsena leswi nghenisiweke leswi nga na khodi ya modyulu.</string>
+    <string name="save_all">Hlayisa Hinkwaswo eka Nongonoko</string>
+    <string name="rescan">Skena nakambe</string>
+    <string name="assessments_title">Milingo</string>
+    <string name="scan_pas">Skena PAS</string>
+    <string name="scanner_assessment_title">Skena Nongonoko wa Milingo</string>
+    <string name="review_assessments_title">Kambisisa Milingo</string>
+    <string name="review_assessments_header">Ku kumekile milingo leyi %1$d. Thepha leswaku u yi kambisisa.</string>
+    <string name="save_all_assessments">Hlayisa Milingo Hinkwayo</string>
+    <string name="add_assessment_manually">Engetela Mulingo hi Voko</string>
+    <string name="no_assessments">A ku na milingo sweswi. Skena PAS ya wena kumbe u engetela hi voko.</string>
+    <string name="filter_all">Hinkwaswo</string>
+    <string name="filter_upcoming">Leswi taka</string>
+    <string name="filter_completed">Leswi heteleke</string>
+    <string name="filter_past">Nkarhi lowu hundzeke</string>
+    <string name="requires_turnitin">Yi lava Turnitin</string>
+    <string name="scanning_upload_title_pas">Layisela Xifaniso xa wena xa PAS</string>
+    <string name="scanning_upload_desc_pas">Hi ta humesa masiku yo hetelela ya milingo.</string>
+    <string name="hint_module_code">Khodi ya modyulu</string>
+    <string name="hint_module_name">Vito ra modyulu</string>
+    <string name="hint_day_of_week">Siku ra vhiki</string>
+    <string name="hint_start_time">Nkarhi wo sungula</string>
+    <string name="hint_end_time">Nkarhi wo hetelela</string>
+    <string name="hint_venue">Ndhawu</string>
+    <string name="desc_delete_entry">Susa leswi nghenisiweke</string>
+
+    <string name="settings_profile_info">Vuxokoxoko bya profayili</string>
+    <string name="settings_first_name">Vito ro sungula</string>
+    <string name="settings_last_name">Xivongo</string>
+    <string name="settings_institution">Xiyenge</string>
+    <string name="settings_course">Khozi</string>
+    <string name="settings_year">Lembe ra dyondzo</string>
+    <string name="settings_btn_update">Antswisa profayili</string>
+    <string name="settings_academic_setup">Lulamiso wa dyondzo</string>
+    <string name="settings_btn_manage_modules">Lawula timodyulu</string>
+    <string name="settings_preferences">Leswi swi tsakisiwaka</string>
+    <string name="settings_language">Ririmi</string>
+    <string name="settings_enable_notifications">Pfumelela switiviso</string>
+    <string name="settings_security">Ntshembo</string>
+    <string name="settings_btn_change_password">Cinca phasiwedi</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">Yi endliwe hi: Team CampusSync</string>
+
+    <string name="error_image_too_large">Xifaniso xi lehe ngopfu. Hlawula lexintsongo.</string>
+    <string name="error_no_entries">A ku na leswi nghenisiweke swa nongonoko leswi kumekeke. Ringeta xifaniso lexi vonakaka kahle.</string>
+    <string name="error_network">Kambisisa vuhlanganisi bya wena bya inthanete.</string>
+    <string name="error_rate_limit">Swikombelo swi tala ngopfu. Rindza timinete kutani u ringeta nakambe.</string>
+    <string name="error_auth">Ku tiyisisa ka AI ku tsandzekile. Vuhlanganisi na nseketelo.</string>
+    <string name="error_generic">A yi kotekanga ku tirhisa xifaniso. Ringeta nakambe.</string>
+    <string name="entries_saved">Leswi nghenisiweke leswi %1$d swi hlayisiwile hi ndlela leyi humelelaka</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Ndzi tsundzuxe emahlweni ka siku ro hetelela</string>
+    <string name="remind_1_day">Siku ra 1 emahlweni</string>
+    <string name="remind_2_days">Masiku ya 2 emahlweni</string>
+    <string name="remind_3_days">Masiku ya 3 emahlweni</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Milawu ya Switiviso</string>
+    <string name="settings_test_notification">Rhumela Xitiviso xa Miringo</string>
+    <string name="settings_test_notification_desc">Tlaya laha ku vona leswaku switiviso swa wena swa siku ro hetelela swi ta vonaka njhani.</string>
+
+</resources>

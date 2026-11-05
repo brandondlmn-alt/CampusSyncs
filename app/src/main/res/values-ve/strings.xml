@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Dashibodo</string>
+    <string name="title_timetable">Mbekanyamaitele ya tshifhinga</string>
+    <string name="title_budget">Mbekanyamushumo ya masheleni</string>
+    <string name="title_assistant">Muthusi wa AI</string>
+    <string name="title_marks">Maraga</string>
+    <string name="title_resources">Zuishumo</string>
+    <string name="title_settings">Khethekanyo</string>
+    <string name="action_logout">Bva</string>
+
+    <string name="login_welcome">Ni ṱanganedzwa hafhu</string>
+    <string name="login_subtitle">Dzhena u itela u bvela phanḓa na CampusSync</string>
+    <string name="login_forgot_password">No hangwa phasiwede?</string>
+    <string name="btn_login">Dzhena</string>
+    <string name="login_or">KANA</string>
+    <string name="btn_google">Bvela phanḓa na Google</string>
+    <string name="login_no_account">A ni na akhawunti? </string>
+
+    <string name="reg_personal_details">Mawanwa a muthu</string>
+    <string name="hint_first_name">Dzina ḽa u thoma</string>
+    <string name="hint_surname">Fani</string>
+    <string name="step_account">Akhawunti</string>
+    <string name="step_institution">Tshimiswa</string>
+    <string name="step_review">Sedzulusa</string>
+    <string name="btn_next">I tevhelaho</string>
+    <string name="btn_register">Dingisa</string>
+    <string name="hint_email">Adiresi ya imeili</string>
+    <string name="hint_password">Phasiwede</string>
+    <string name="hint_confirm_password">Khwathisedza Phasiwede</string>
+    <string name="hint_campus">Fhethu ha khamphasi</string>
+    <string name="hint_course">Khozi</string>
+    <string name="hint_year">Nwaha wa pfunzo</string>
+    <string name="hint_semester">Semesta ya zwino</string>
+    <string name="is_rosebank_student">Ndi inwi mutshudeni wa Rosebank International?</string>
+    <string name="optimization_note">CampusSync yo itelwa vhathudeni vha Rosebank International.</string>
+    <string name="manual_modules_note">Ni nga engedza dzimodule nga murahu kha tshikirini tsha Mbekanyamaitele ya tshifhinga.</string>
+    <string name="review_header">Sedzulusa Mawanwa a Vho</string>
+    <string name="review_name_label">Dzina: </string>
+    <string name="review_email_label">Imeili: </string>
+    <string name="review_campus_label">Khamphasi: </string>
+    <string name="review_course_label">Khozi: </string>
+    <string name="review_year_label">Nwaha: </string>
+    <string name="review_semester_label">Semesta: </string>
+    <string name="review_modules_header">Dzimodule dza vho dza Nwaha %1$d, Semesta %2$d:</string>
+    <string name="review_modules_note">Dzimodule hedzi dzi do engedzwa kha mbekanyamaitele ya vho ya tshifhinga.</string>
+
+    <string name="dash_upcoming_class">Kilasi ḽi ḓaho</string>
+    <string name="dash_current_avg">Phakathi ya zwino</string>
+    <string name="dash_budget_left">Mbekanyamushumo yo salaho</string>
+    <string name="dash_upcoming_deadlines">Maḓuvha a u fhedza a ḓaho</string>
+    <string name="dash_no_deadlines">A hu na maḓuvha a u fhedza a ḓaho 🎉</string>
+    <string name="dash_ai_title">Muthusi wa AI</string>
+    <string name="dash_ai_desc">Tinya giriphi u wana nyeletshedzo ya u guda!</string>
+    <string name="dash_btn_tip">Wana nyeletshedzo</string>
+    <string name="dash_recent_assessments">Milingo ya tshifhinga tsho fhelaho</string>
+
+    <string name="timetable_empty">A hu na dzikilasi dzo dzudzanywaho.\nTinya + u engedza iṅwe.</string>
+    <string name="desc_add_class">Engedza kilasi</string>
+
+    <string name="budget_monthly">Mbekanyamushumo ya nwedzi</string>
+    <string name="budget_btn_set">Vhea ndugelo</string>
+    <string name="budget_empty">A hu na tshinyalelo nwedzini uno.\nTinya + u engedza iṅwe.</string>
+    <string name="desc_add_expense">Engedza tshinyalelo</string>
+
+    <string name="marks_avg">Phakathi yo ṱanganyiswaho</string>
+    <string name="marks_empty">A hu na maraga o ṅwalisiwaho.\nTinya + u engedza iṅwe.</string>
+    <string name="desc_add_mark">Engedza maraga</string>
+
+    <string name="scan_timetable_title">Skena Mbekanyamaitele</string>
+    <string name="choose_from_gallery">Nanga u bva kha galari</string>
+    <string name="scanning_message">I saukanya mbekanyamaitele ya vho...</string>
+    <string name="scanning_upload_title">Laisa Tshifanyiso tsha Mbekanyamaitele</string>
+    <string name="scanning_upload_desc">Ri do bvisa dzimodule, tshifhinga na fhethu uri ni sedzulusa.</string>
+    <string name="review_entries_title">Sedzulusa Zwo Nwalisiwaho</string>
+    <string name="review_entries_header">Ho wanala zwo nwalisiwaho zwi %1$d. Thepha uri ni dzudzanye phanda ha u vhulunga.</string>
+    <string name="review_save_note">Zwi do vhulungwa fhedzi zwo nwalisiwaho zwine zwa vha na khoudu ya module.</string>
+    <string name="save_all">Vhulunga Zwoṱhe kha Mbekanyamaitele</string>
+    <string name="rescan">Skena hafhu</string>
+    <string name="assessments_title">Milingo</string>
+    <string name="scan_pas">Skena PAS</string>
+    <string name="scanner_assessment_title">Skena Mbekanyamaitele ya Milingo</string>
+    <string name="review_assessments_title">Sedzulusa Milingo</string>
+    <string name="review_assessments_header">Ho wanala milingo i %1$d. Thepha uri ni i sedzulusa.</string>
+    <string name="save_all_assessments">Vhulunga Milingo Yoṱhe</string>
+    <string name="add_assessment_manually">Engedza Mulingo nga Tshannda</string>
+    <string name="no_assessments">A hu na milingo zwino. Skena PAS ya vho kana ni engedze nga tshannda.</string>
+    <string name="filter_all">Zwoṱhe</string>
+    <string name="filter_upcoming">Zwi ḓaho</string>
+    <string name="filter_completed">Zwo fhelaho</string>
+    <string name="filter_past">Tshifhinga tsho fhelaho</string>
+    <string name="requires_turnitin">I ṱoḍa Turnitin</string>
+    <string name="scanning_upload_title_pas">Laisa Tshifanyiso tsha vho tsha PAS</string>
+    <string name="scanning_upload_desc_pas">Ri do bvisa maḓuvha a u fhedza a milingo.</string>
+    <string name="hint_module_code">Khoudu ya modula</string>
+    <string name="hint_module_name">Dzina la modula</string>
+    <string name="hint_day_of_week">Ḓuvha ḽa vhege</string>
+    <string name="hint_start_time">Tshifhinga tsha u thoma</string>
+    <string name="hint_end_time">Tshifhinga tsha u fhela</string>
+    <string name="hint_venue">Fhethu</string>
+    <string name="desc_delete_entry">Bvisa zwo nwalisiwaho</string>
+
+    <string name="settings_profile_info">Mawanwa a profaele</string>
+    <string name="settings_first_name">Dzina ḽa u thoma</string>
+    <string name="settings_last_name">Fani</string>
+    <string name="settings_institution">Tshimiswa</string>
+    <string name="settings_course">Khozi</string>
+    <string name="settings_year">Nwaha wa pfunzo</string>
+    <string name="settings_btn_update">Khwinisa profaele</string>
+    <string name="settings_academic_setup">Mbekanyamaitele ya pfunzo</string>
+    <string name="settings_btn_manage_modules">Langa dzimodule</string>
+    <string name="settings_preferences">Zwine na zwi funa</string>
+    <string name="settings_language">Luambo</string>
+    <string name="settings_enable_notifications">Tendela nyeletshedzo</string>
+    <string name="settings_security">Tsireledzo</string>
+    <string name="settings_btn_change_password">Shandukisa phasiwede</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">Yo itwa nga: Team CampusSync</string>
+
+    <string name="error_image_too_large">Tshifanyiso tshihulu nga maanḓa. Nanga tshinṱuku.</string>
+    <string name="error_no_entries">A hu na zwo nwalisiwaho zwa mbekanyamaitele zwo wanalaho. Lingedza tshifanyiso tsho kunakaho.</string>
+    <string name="error_network">Sedzulusa vhukwamani ha inthanete.</string>
+    <string name="error_rate_limit">Zwikumbu zwo ndowela. Litsha mutsotso ni lingedze hafhu.</string>
+    <string name="error_auth">U khwathisedza ha AI ho kundelwa. Kwamani na thikhedzo.</string>
+    <string name="error_generic">A zwo ngo kona u shuma tshifanyiso. Lingedza hafhu.</string>
+    <string name="entries_saved">Zwo nwalisiwaho zwi %1$d zwo vhulungwa nga mvelelo</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Nkhumbudze phanḓa ha ḓuvha ḽa u fhedza</string>
+    <string name="remind_1_day">Ḓuvha ḽa 1 phanḓa</string>
+    <string name="remind_2_days">Maḓuvha a 2 phanḓa</string>
+    <string name="remind_3_days">Maḓuvha a 3 phanḓa</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Khethekanyo dza Nyeletshedzo</string>
+    <string name="settings_test_notification">Rumela Nyeletshedzo ya Teko</string>
+    <string name="settings_test_notification_desc">Tinya afha u vhona uri nyeletshedzo dzau dza ḓuvha ḽa u fhedza dzi do sumbedza hani.</string>
+
+</resources>

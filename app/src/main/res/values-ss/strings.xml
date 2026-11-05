@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Idashbhodi</string>
+    <string name="title_timetable">Luhlelo lwesikhatsi</string>
+    <string name="title_budget">Ibhajethi</string>
+    <string name="title_assistant">Umsiti we-AI</string>
+    <string name="title_marks">Emamaki</string>
+    <string name="title_resources">Iinsita</string>
+    <string name="title_settings">Tilungiselelo</string>
+    <string name="action_logout">Phuma</string>
+
+    <string name="login_welcome">Wemukelekile futsi</string>
+    <string name="login_subtitle">Ngena kute uchubeke ku-CampusSync</string>
+    <string name="login_forgot_password">Ukhohliwe iphasiwedi?</string>
+    <string name="btn_login">Ngena</string>
+    <string name="login_or">NOMA</string>
+    <string name="btn_google">Chubeka nge-Google</string>
+    <string name="login_no_account">Awunayo i-akhawunti? </string>
+
+    <string name="reg_personal_details">Imininingwane yomuntu</string>
+    <string name="hint_first_name">Libito lekucala</string>
+    <string name="hint_surname">Sibongo</string>
+    <string name="step_account">I-akhawunti</string>
+    <string name="step_institution">Sikhungo</string>
+    <string name="step_review">Buyeketa</string>
+    <string name="btn_next">Lokulandzelako</string>
+    <string name="btn_register">Bhalisa</string>
+    <string name="hint_email">Likheli le-imeyili</string>
+    <string name="hint_password">Iphasiwedi</string>
+    <string name="hint_confirm_password">Cinisekisa Iphasiwedi</string>
+    <string name="hint_campus">Indzawo yekhampasi</string>
+    <string name="hint_course">Sifundo</string>
+    <string name="hint_year">Umnyaka wetifundo</string>
+    <string name="hint_semester">Semesta yamanje</string>
+    <string name="is_rosebank_student">Ngabe ungumfundzi waseRosebank International?</string>
+    <string name="optimization_note">I-CampusSync ilungiselelwe bafundzi baseRosebank International.</string>
+    <string name="manual_modules_note">Ungengeza emamojula ngemuva kusikrini seLuhlelo lwesikhatsi.</string>
+    <string name="review_header">Buyeketa Imininingwane Yakho</string>
+    <string name="review_name_label">Libito: </string>
+    <string name="review_email_label">I-imeyili: </string>
+    <string name="review_campus_label">Ikhampasi: </string>
+    <string name="review_course_label">Sifundo: </string>
+    <string name="review_year_label">Umnyaka: </string>
+    <string name="review_semester_label">Semesta: </string>
+    <string name="review_modules_header">Emamojula akho omnyaka %1$d, semesta %2$d:</string>
+    <string name="review_modules_note">Lamamojula atawengezwa eluhlelweni lwakho lwesikhatsi.</string>
+
+    <string name="dash_upcoming_class">Ikilasi lelitako</string>
+    <string name="dash_current_avg">Silinganiso samanje</string>
+    <string name="dash_budget_left">Imali lesele</string>
+    <string name="dash_upcoming_deadlines">Emalanga ekugcina latako</string>
+    <string name="dash_no_deadlines">Akukho emalanga ekugcina latako 🎉</string>
+    <string name="dash_ai_title">Umsiti we-AI</string>
+    <string name="dash_ai_desc">Cofa libhathini kute utfole lichibi lekufunda!</string>
+    <string name="dash_btn_tip">Tfola lichibi</string>
+    <string name="dash_recent_assessments">Tivivinyo tacako</string>
+
+    <string name="timetable_empty">Akukho tifundo letihleliwe.\nCofa + kute wengeze lelinye.</string>
+    <string name="desc_add_class">Engeza ikilasi</string>
+
+    <string name="budget_monthly">Ibhajethi yenyanga</string>
+    <string name="budget_btn_set">Beka sabelo</string>
+    <string name="budget_empty">Akukho tindleko kule nyanga.\nCofa + kute wengeze lelinye.</string>
+    <string name="desc_add_expense">Engeza tindleko</string>
+
+    <string name="marks_avg">Silinganiso sekukonkhe</string>
+    <string name="marks_empty">Akukho emamaki labhaliwe.\nCofa + kute wengeze lelinye.</string>
+    <string name="desc_add_mark">Engeza emamaki</string>
+
+    <string name="scan_timetable_title">Skena Luhlelo</string>
+    <string name="choose_from_gallery">Khetsa kugalari</string>
+    <string name="scanning_message">Ihlatiya luhlelo lwakho...</string>
+    <string name="scanning_upload_title">Layisha Sitfombe seluhlelo</string>
+    <string name="scanning_upload_desc">Sitokhipha emamojula, sikhatsi, nendzawo kute uwubuyekete.</string>
+    <string name="review_entries_title">Buyeketa Lokufakiwe</string>
+    <string name="review_entries_header">Kutfolwe lokufakiwe lokungu-%1$d. Thepha kute uhlele ngaphambi kwekugcina.</string>
+    <string name="review_save_note">Kugcinwa kuphela lokufakiwe lokunekhodi yemojula.</string>
+    <string name="save_all">Gcina Konkhe Kuluhlelo</string>
+    <string name="rescan">Skena futsi</string>
+    <string name="assessments_title">Tivivinyo</string>
+    <string name="scan_pas">Skena i-PAS</string>
+    <string name="scanner_assessment_title">Skena Luhlelo lwetivivinyo</string>
+    <string name="review_assessments_title">Buyeketa Tivivinyo</string>
+    <string name="review_assessments_header">Kutfolwe tivivinyo letingu-%1$d. Thepha kute uhlele.</string>
+    <string name="save_all_assessments">Gcina Tonkhe Tivivinyo</string>
+    <string name="add_assessment_manually">Engeza Sivivinyo Ngesandla</string>
+    <string name="no_assessments">Akukho tivivinyo nyalo. Skena i-PAS yakho noma wengeze ngesandla.</string>
+    <string name="filter_all">Konkhe</string>
+    <string name="filter_upcoming">Lokutako</string>
+    <string name="filter_completed">Lokucotsiwe</string>
+    <string name="filter_past">Sikhatsi lesedlule</string>
+    <string name="requires_turnitin">Idinga i-Turnitin</string>
+    <string name="scanning_upload_title_pas">Layisha Sitfombe sakho se-PAS</string>
+    <string name="scanning_upload_desc_pas">Sitokhipha emalanga ekugcina etivivinyo.</string>
+    <string name="hint_module_code">Ikhodi yemojula</string>
+    <string name="hint_module_name">Ligama lemojula</string>
+    <string name="hint_day_of_week">Lilanga leliviki</string>
+    <string name="hint_start_time">Sikhatsi sekucala</string>
+    <string name="hint_end_time">Sikhatsi sekuphela</string>
+    <string name="hint_venue">Indzawo</string>
+    <string name="desc_delete_entry">Susa lokufakiwe</string>
+
+    <string name="settings_profile_info">Lwati lwephrofayela</string>
+    <string name="settings_first_name">Libito lekucala</string>
+    <string name="settings_last_name">Sibongo</string>
+    <string name="settings_institution">Sikhungo</string>
+    <string name="settings_course">Sifundo</string>
+    <string name="settings_year">Umnyaka wetifundo</string>
+    <string name="settings_btn_update">Hlaziya iphrofayela</string>
+    <string name="settings_academic_setup">Kuhlelwa kwetemfundvo</string>
+    <string name="settings_btn_manage_modules">Lawula emamojula</string>
+    <string name="settings_preferences">Lokukhetsako</string>
+    <string name="settings_language">Lulwimi</string>
+    <string name="settings_enable_notifications">Vumela tibika</string>
+    <string name="settings_security">Kuphepha</string>
+    <string name="settings_btn_change_password">Shintsha iphasiwedi</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">Yentiwe ngu: Team CampusSync</string>
+
+    <string name="error_image_too_large">Sitfombe sikhulu kakhulu. Khetsa lesincane.</string>
+    <string name="error_no_entries">Akukho lokufakiwe kweluhlelo lokutfoliwe. Zama sitfombe lesicacile.</string>
+    <string name="error_network">Hlola kuxhumana kwakho kwe-inthanethi.</string>
+    <string name="error_rate_limit">Ticelo tiningi kakhulu. Linda umzuzu bese uzama futsi.</string>
+    <string name="error_auth">Kucinisekisa kwe-AI kwehlulekile. Xhumana nekusita.</string>
+    <string name="error_generic">Ayikwazanga kucubungula sitfombe. Zama futsi.</string>
+    <string name="entries_saved">Lokufakiwe lokungu-%1$d kugcinwe ngemphumelelo</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Ngikhumbute ngaphambi kwelilanga lekugcina</string>
+    <string name="remind_1_day">Lilanga leku-1 ngaphambi</string>
+    <string name="remind_2_days">Emalanga lama-2 ngaphambi</string>
+    <string name="remind_3_days">Emalanga lama-3 ngaphambi</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Tilungiselelo Tetibika</string>
+    <string name="settings_test_notification">Tfumela Sibika Sekuhlola</string>
+    <string name="settings_test_notification_desc">Cofa lapha kute ubone kutsi tibika takho telilanga lekugcina titawubukeka kanjani.</string>
+
+</resources>

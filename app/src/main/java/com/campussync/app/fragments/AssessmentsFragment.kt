@@ -1,9 +1,8 @@
 package com.campussync.app.fragments
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -18,19 +17,26 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.campussync.app.R
 import com.campussync.app.activities.ScannerAssessmentActivity
 import com.campussync.app.adapters.AssessmentAdapter
 import com.campussync.app.data.AssessmentRepository
 import com.campussync.app.databinding.FragmentAssessmentsBinding
 import com.campussync.app.models.Assessment
-import com.campussync.app.utils.AssessmentNotificationReceiver
+import com.campussync.app.utils.SingleReminderWorker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class AssessmentsFragment : Fragment() {
 
@@ -48,7 +54,7 @@ class AssessmentsFragment : Fragment() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        if (!isGranted) {
+        if (!isGranted && isAdded) {
             Toast.makeText(requireContext(), "Notifications are disabled. You won't receive reminders.", Toast.LENGTH_LONG).show()
         }
     }
@@ -84,7 +90,7 @@ class AssessmentsFragment : Fragment() {
 
         adapter = AssessmentAdapter(
             onCompleteToggle = { assessment, isChecked -> toggleCompletion(assessment, isChecked) },
-            onNotifyClick = { assessment -> showNotificationOptions(assessment) },
+            onNotifyClick = { assessment -> showReminderOptionsDialog(assessment) },
             onClick = { assessment -> /* Future: Edit Dialog */ }
         )
         binding.rvAssessments.layoutManager = LinearLayoutManager(requireContext())
@@ -102,7 +108,10 @@ class AssessmentsFragment : Fragment() {
             .addSnapshotListener { snapshot, error ->
                 if (_binding == null) return@addSnapshotListener
                 binding.progressBar.visibility = View.GONE
-                if (error != null) return@addSnapshotListener
+                if (error != null) {
+                    Log.e(TAG, "Error observing assessments", error)
+                    return@addSnapshotListener
+                }
 
                 allAssessments = snapshot?.toObjects(Assessment::class.java)?.sortedBy { it.dueDate } ?: emptyList()
                 applyFilter(binding.chipGroupFilters.checkedChipId)
@@ -110,94 +119,120 @@ class AssessmentsFragment : Fragment() {
     }
 
     private fun toggleCompletion(assessment: Assessment, isChecked: Boolean) {
-        lifecycleScope.launch {
-            repository.updateCompletionStatus(assessment.id, isChecked).onSuccess {
-                if (isChecked) {
-                    cancelReminder(assessment) // Cancel notifications if task is done
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                repository.updateCompletionStatus(assessment.id, isChecked).onSuccess {
+                    if (isChecked) {
+                        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("reminder_${assessment.id}")
+                    }
+                }.onFailure {
+                    if (isAdded && _binding != null) {
+                        Toast.makeText(requireContext(), "Failed to update status", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }.onFailure {
-                Toast.makeText(requireContext(), "Failed to update status", Toast.LENGTH_SHORT).show()
+            } catch (e: CancellationException) {
+                // Ignore normal navigation
             }
         }
     }
 
-    private fun showNotificationOptions(assessment: Assessment) {
+    private fun showReminderOptionsDialog(assessment: Assessment) {
         if (assessment.completed) {
-            Toast.makeText(requireContext(), "Assessment is already completed", Toast.LENGTH_SHORT).show()
+            if (isAdded && _binding != null) {
+                Toast.makeText(requireContext(), "Assessment is already completed", Toast.LENGTH_SHORT).show()
+            }
             return
         }
 
-        val options = arrayOf("1 Hour Before", "3 Hours Before", "1 Day Before", "At Due Time", "Cancel Reminder")
+        val options = arrayOf("Set Custom Timer", "Cancel Existing Reminder")
+
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Set Reminder")
+            .setTitle("Reminder Settings")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> scheduleReminder(assessment, 60)
-                    1 -> scheduleReminder(assessment, 180)
-                    2 -> scheduleReminder(assessment, 1440)
-                    3 -> scheduleReminder(assessment, 0)
-                    4 -> {
-                        cancelReminder(assessment)
-                        Toast.makeText(requireContext(), "Reminder cancelled", Toast.LENGTH_SHORT).show()
+                    0 -> openCustomDateTimePicker(assessment)
+                    1 -> {
+                        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("reminder_${assessment.id}")
+                        if (isAdded && _binding != null) {
+                            Toast.makeText(requireContext(), "Reminder cancelled", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
             .show()
     }
 
-    private fun scheduleReminder(assessment: Assessment, minutesBefore: Int) {
-        try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
-            val dueDateTime = sdf.parse("${assessment.dueDate} ${assessment.dueTime}") ?: return
-            
-            val calendar = Calendar.getInstance()
-            calendar.time = dueDateTime
-            calendar.add(Calendar.MINUTE, -minutesBefore)
+    private fun openCustomDateTimePicker(assessment: Assessment) {
+        val calendar = Calendar.getInstance()
 
-            if (calendar.timeInMillis <= System.currentTimeMillis()) {
-                Toast.makeText(requireContext(), "Due date has already passed", Toast.LENGTH_SHORT).show()
-                return
-            }
+        // 1. Date Picker
+        val datePicker = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(requireContext(), AssessmentNotificationReceiver::class.java).apply {
-                putExtra("MODULE_CODE", assessment.moduleCode)
-                putExtra("TYPE", assessment.assessmentType)
-                putExtra("ID", assessment.id.hashCode())
-            }
+                // 2. Time Picker
+                val timePicker = TimePickerDialog(
+                    requireContext(),
+                    { _, hourOfDay, minute ->
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        calendar.set(Calendar.MINUTE, minute)
+                        calendar.set(Calendar.SECOND, 0)
 
-            val pendingIntent = PendingIntent.getBroadcast(
-                requireContext(),
-                assessment.id.hashCode(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+                        scheduleCustomReminder(assessment, calendar.timeInMillis)
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true // 24-hour format
+                )
+                timePicker.show()
 
-            // API 31+ requires exact alarm permission for setExact
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-                startActivity(Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                return
-            }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
 
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            Toast.makeText(requireContext(), "Reminder set for ${SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(calendar.time)}", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Failed to set reminder", Toast.LENGTH_SHORT).show()
-        }
+        datePicker.datePicker.minDate = System.currentTimeMillis() - 1000
+        datePicker.setTitle("Select Reminder Date")
+        datePicker.show()
     }
 
-    private fun cancelReminder(assessment: Assessment) {
-        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireContext(), AssessmentNotificationReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            requireContext(),
-            assessment.id.hashCode(),
-            intent,
-            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-        )
-        if (pendingIntent != null) {
-            alarmManager.cancel(pendingIntent)
-            pendingIntent.cancel()
+    private fun scheduleCustomReminder(assessment: Assessment, triggerTimeMillis: Long) {
+        val currentTimeMillis = System.currentTimeMillis()
+
+        if (triggerTimeMillis <= currentTimeMillis) {
+            if (isAdded && _binding != null) {
+                Toast.makeText(requireContext(), "Reminder time has already passed.", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
+        val delay = triggerTimeMillis - currentTimeMillis
+        val notificationId = assessment.id.hashCode()
+
+        val workData = Data.Builder()
+            .putString("moduleName", assessment.moduleName)
+            .putString("type", assessment.assessmentType)
+            .putInt("notificationId", notificationId)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<SingleReminderWorker>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setInputData(workData)
+            .addTag("reminder_${assessment.id}")
+            .build()
+
+        WorkManager.getInstance(requireContext()).enqueue(workRequest)
+
+        val format = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault())
+        val formattedTime = format.format(Date(triggerTimeMillis))
+
+        if (isAdded && _binding != null) {
+            Toast.makeText(requireContext(), "Sticky reminder set for $formattedTime", Toast.LENGTH_LONG).show()
         }
     }
 

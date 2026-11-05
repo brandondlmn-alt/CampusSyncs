@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monthly Budget"
+                android:text="@string/budget_monthly"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textColor="@color/primary_blue"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"
-                android:text="Set Allowance"
+                android:text="@string/budget_btn_set"
                 android:textColor="@color/primary_blue" />
 
         </LinearLayout>
@@ -80,7 +80,7 @@
         android:id="@+id/tvEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No expenses this month.\nTap + to add one."
+        android:text="@string/budget_empty"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
         android:textColor="@color/text_secondary"
@@ -105,7 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:contentDescription="Add expense"
+        android:contentDescription="@string/desc_add_expense"
         app:backgroundTint="@color/primary_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

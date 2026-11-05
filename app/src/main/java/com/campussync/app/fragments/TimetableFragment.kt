@@ -23,6 +23,7 @@ import com.campussync.app.models.TimetableEntry
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -80,6 +81,8 @@ class TimetableFragment : Fragment() {
 
     private fun observeTimetable() {
         binding.progressBar.visibility = View.VISIBLE
+
+        // FIXED: Changed to viewLifecycleOwner.lifecycleScope
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 repository.getTimetableEntries().collect { entries ->
@@ -89,9 +92,11 @@ class TimetableFragment : Fragment() {
                         binding.tvEmptyState.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
                     }
                 }
+            } catch (e: CancellationException) {
+                // FIXED: Ignore normal navigation cancellation
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to collect timetable entries", e)
-                if (_binding != null) {
+                if (isAdded && _binding != null) {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "Failed to load timetable. Please try again.", Toast.LENGTH_SHORT).show()
                 }
@@ -100,14 +105,19 @@ class TimetableFragment : Fragment() {
     }
 
     private fun checkModulesAndShowDialog(entry: TimetableEntry?) {
+        // FIXED: Changed to viewLifecycleOwner.lifecycleScope
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val modules = moduleRepository.getModules().first()
                 if (modules.isEmpty()) {
-                    Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
+                    if (isAdded && _binding != null) {
+                        Toast.makeText(requireContext(), "Please add modules in Settings first", Toast.LENGTH_LONG).show()
+                    }
                 } else {
                     showAddEditDialog(entry, modules)
                 }
+            } catch (e: CancellationException) {
+                // Ignore
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to check modules", e)
             }
@@ -115,6 +125,8 @@ class TimetableFragment : Fragment() {
     }
 
     private fun showAddEditDialog(entry: TimetableEntry?, modules: List<Module>) {
+        if (_binding == null) return
+
         val dialogBinding = DialogAddTimetableEntryBinding.inflate(layoutInflater)
         val isEdit = entry != null
 
@@ -176,6 +188,7 @@ class TimetableFragment : Fragment() {
                     venue = venue
                 )
 
+                // FIXED: Changed to viewLifecycleOwner.lifecycleScope
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = if (isEdit) repository.updateEntry(newEntry) else repository.addEntry(newEntry)
                     if (_binding != null) {
@@ -216,6 +229,7 @@ class TimetableFragment : Fragment() {
             .setTitle("Delete Entry")
             .setMessage("Delete ${entry.moduleCode} class?")
             .setPositiveButton("Delete") { _, _ ->
+
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = repository.deleteEntry(entry.id)
                     if (_binding != null) {

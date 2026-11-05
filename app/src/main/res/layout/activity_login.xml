@@ -19,7 +19,7 @@
             android:id="@+id/tvLoginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome Back"
+            android:text="@string/login_welcome"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
             android:textColor="@color/primary_blue"
             android:textStyle="bold" />
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Sign in to continue to CampusSync"
+            android:text="@string/login_subtitle"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:textColor="@color/text_secondary" />
     </LinearLayout>
@@ -55,7 +55,7 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/hint_email"
                 app:boxCornerRadiusBottomEnd="20dp"
                 app:boxCornerRadiusBottomStart="20dp"
                 app:boxCornerRadiusTopEnd="20dp"
@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Password"
+                android:hint="@string/hint_password"
                 app:boxCornerRadiusBottomEnd="20dp"
                 app:boxCornerRadiusBottomStart="20dp"
                 app:boxCornerRadiusTopEnd="20dp"
@@ -95,7 +95,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="12dp"
                 android:padding="8dp"
-                android:text="Forgot Password?"
+                android:text="@string/login_forgot_password"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:textColor="@color/primary_blue" />
 
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="24dp"
-                android:text="Login"
+                android:text="@string/btn_login"
                 android:textSize="16sp"
                 app:cornerRadius="50dp" />
 
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="OR"
+                android:text="@string/login_or"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 android:textColor="@color/text_secondary" />
 
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="16dp"
-                android:text="Continue with Google"
+                android:text="@string/btn_google"
                 android:textColor="@color/text_main"
                 app:cornerRadius="50dp"
                 app:icon="@drawable/ic_google_logo"
@@ -147,7 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account? "
+            android:text="@string/login_no_account"
             android:textColor="@color/text_secondary" />
 
         <TextView
@@ -155,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:text="Register"
+            android:text="@string/btn_register"
             android:textColor="@color/primary_blue"
             android:textStyle="bold" />
     </LinearLayout>

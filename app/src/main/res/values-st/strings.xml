@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Letlobo la taolo</string>
+    <string name="title_timetable">Lenaneo la nako</string>
+    <string name="title_budget">Tekanyetso ea chelete</string>
+    <string name="title_assistant">Mothusi oa AI</string>
+    <string name="title_marks">Lintlha</string>
+    <string name="title_resources">Lisebelisoa</string>
+    <string name="title_settings">Litlhophiso</string>
+    <string name="action_logout">Tsoa</string>
+
+    <string name="login_welcome">U amohelehile hape</string>
+    <string name="login_subtitle">Kena ho tsoela pele ho CampusSync</string>
+    <string name="login_forgot_password">U lebetse phasewete?</string>
+    <string name="btn_login">Kena</string>
+    <string name="login_or">KAPA</string>
+    <string name="btn_google">Tsoela pele ka Google</string>
+    <string name="login_no_account">Ha u na akhaonto? </string>
+
+    <string name="reg_personal_details">Lintlha tsa motho</string>
+    <string name="hint_first_name">Lebitso la pele</string>
+    <string name="hint_surname">Fane</string>
+    <string name="step_account">Akhaonto</string>
+    <string name="step_institution">Setsi</string>
+    <string name="step_review">Hlahloba</string>
+    <string name="btn_next">E latelang</string>
+    <string name="btn_register">Ngodisa</string>
+    <string name="hint_email">Aterese ea imeile</string>
+    <string name="hint_password">Phasewete</string>
+    <string name="hint_confirm_password">Netefatsa Phasewete</string>
+    <string name="hint_campus">Sebaka sa khamphase</string>
+    <string name="hint_course">Thupelo</string>
+    <string name="hint_year">Selemo sa thuto</string>
+    <string name="hint_semester">Semester ea hajoale</string>
+    <string name="is_rosebank_student">Na u moithuti oa Rosebank International?</string>
+    <string name="optimization_note">CampusSync e etselitsoe baithuti ba Rosebank International.</string>
+    <string name="manual_modules_note">U ka eketsa dimodule hamorao skrineng sa Lenaneo la nako.</string>
+    <string name="review_header">Hlahloba Lintlha tsa Hau</string>
+    <string name="review_name_label">Lebitso: </string>
+    <string name="review_email_label">Imeile: </string>
+    <string name="review_campus_label">Khamphase: </string>
+    <string name="review_course_label">Thupelo: </string>
+    <string name="review_year_label">Selemo: </string>
+    <string name="review_semester_label">Semester: </string>
+    <string name="review_modules_header">Dimodule tsa hau tsa Selemo %1$d, Semester %2$d:</string>
+    <string name="review_modules_note">Dimodule tsena li tla eketsoa lenaneong la hau la nako.</string>
+
+    <string name="dash_upcoming_class">Sehlopha se tlang</string>
+    <string name="dash_current_avg">Karolelano ea hajoale</string>
+    <string name="dash_budget_left">Tekanyetso e setseng</string>
+    <string name="dash_upcoming_deadlines">Matsatsi a ho qetela a tlang</string>
+    <string name="dash_no_deadlines">Ha ho matsatsi a ho qetela a tlang 🎉</string>
+    <string name="dash_ai_title">Mothusi oa AI</string>
+    <string name="dash_ai_desc">Tlanya konopo ho fumana keletso ea ho ithuta!</string>
+    <string name="dash_btn_tip">Fumana keletso</string>
+    <string name="dash_recent_assessments">Liteko tsa morao tjena</string>
+
+    <string name="timetable_empty">Ha ho lihlopha tse hlophisitsoeng.\nTlanya + ho eketsa e le \'ngoe.</string>
+    <string name="desc_add_class">Eketsa sehlopha</string>
+
+    <string name="budget_monthly">Tekanyetso ea khoeli</string>
+    <string name="budget_btn_set">Beha kabelo</string>
+    <string name="budget_empty">Ha ho litšenyehelo khoeling ena.\nTlanya + ho eketsa e le \'ngoe.</string>
+    <string name="desc_add_expense">Eketsa litšenyehelo</string>
+
+    <string name="marks_avg">Karolelano e akaretsang</string>
+    <string name="marks_empty">Ha ho lintlha tse tlalehiloeng.\nTlanya + ho eketsa e le \'ngoe.</string>
+    <string name="desc_add_mark">Eketsa lintlha</string>
+
+    <string name="scan_timetable_title">Skena Lenaneo la nako</string>
+    <string name="choose_from_gallery">Khetha ho tsoa gallereng</string>
+    <string name="scanning_message">E hlahloba lenaneo la hau la nako...</string>
+    <string name="scanning_upload_title">Kenya Setšoantšo sa Lenaneo</string>
+    <string name="scanning_upload_desc">Re tla ntša dimodule, linako le libaka hore u li hlahlobe.</string>
+    <string name="review_entries_title">Hlahloba Likhetho</string>
+    <string name="review_entries_header">Ho fumanoe likhetho tse %1$d. Tlanya ho li fetola pele u boloka.</string>
+    <string name="review_save_note">Ke feela likhetho tse nang le khoutu ea module tse tla bolokoa.</string>
+    <string name="save_all">Boloka Tsohle ho Lenaneo</string>
+    <string name="rescan">Skena hape</string>
+    <string name="assessments_title">Liteko</string>
+    <string name="scan_pas">Skena PAS</string>
+    <string name="scanner_assessment_title">Skena Lenaneo la Liteko</string>
+    <string name="review_assessments_title">Hlahloba Liteko</string>
+    <string name="review_assessments_header">Ho fumanoe liteko tse %1$d. Tlanya ho li hlahloba.</string>
+    <string name="save_all_assessments">Boloka Liteko Tsohle</string>
+    <string name="add_assessment_manually">Eketsa Teko ka Letsoho</string>
+    <string name="no_assessments">Ha ho liteko hajoale. Skena PAS ea hau kapa u eketsa ka letsoho.</string>
+    <string name="filter_all">Tsohle</string>
+    <string name="filter_upcoming">Tse tlang</string>
+    <string name="filter_completed">Tse phethiloeng</string>
+    <string name="filter_past">Nako e fetileng</string>
+    <string name="requires_turnitin">E hloka Turnitin</string>
+    <string name="scanning_upload_title_pas">Kenya Setšoantšo sa hau sa PAS</string>
+    <string name="scanning_upload_desc_pas">Re tla ntša matsatsi a ho qetela a liteko.</string>
+    <string name="hint_module_code">Khoutu ea module</string>
+    <string name="hint_module_name">Lebitso la module</string>
+    <string name="hint_day_of_week">Letsatsi la beke</string>
+    <string name="hint_start_time">Nako ea ho qala</string>
+    <string name="hint_end_time">Nako ea ho qetela</string>
+    <string name="hint_venue">Sebaka</string>
+    <string name="desc_delete_entry">Tlosa khetho</string>
+
+    <string name="settings_profile_info">Tlhahisoleseding ea profil</string>
+    <string name="settings_first_name">Lebitso la pele</string>
+    <string name="settings_last_name">Fane</string>
+    <string name="settings_institution">Setsi</string>
+    <string name="settings_course">Thupelo</string>
+    <string name="settings_year">Selemo sa thuto</string>
+    <string name="settings_btn_update">Ntlafatsa profil</string>
+    <string name="settings_academic_setup">Tlhophiso ea thuto</string>
+    <string name="settings_btn_manage_modules">Laola dimodule</string>
+    <string name="settings_preferences">Likhetho</string>
+    <string name="settings_language">Puo</string>
+    <string name="settings_enable_notifications">Dumella ditsebiso</string>
+    <string name="settings_security">Tšireletso</string>
+    <string name="settings_btn_change_password">Fetola phasewete</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">E entsoe ke: Team CampusSync</string>
+
+    <string name="error_image_too_large">Setšoantšo se seholo haholo. Khetha se senyenyane.</string>
+    <string name="error_no_entries">Ha ho na likhetho tsa lenaneo tse fumanoeng. Leka setšoantšo se hlakileng.</string>
+    <string name="error_network">Hlahloba khokahano ea hau ea inthanete.</string>
+    <string name="error_rate_limit">Likopo li ngata haholo. Ema motsotso ebe u leka hape.</string>
+    <string name="error_auth">Netefatso ea AI e hlotsoe. Ikopanye le tšehetso.</string>
+    <string name="error_generic">Ha ea khona ho sebetsa setšoantšo. Leka hape.</string>
+    <string name="entries_saved">Likhetho tse %1$d li bolokiloe ka katleho</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Nkhopotse pele ho letsatsi la ho qetela</string>
+    <string name="remind_1_day">Letsatsi la 1 pele</string>
+    <string name="remind_2_days">Matsatsi a 2 pele</string>
+    <string name="remind_3_days">Matsatsi a 3 pele</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Litlhophiso tsa Ditsebiso</string>
+    <string name="settings_test_notification">Romela Tsebiso ea Teko</string>
+    <string name="settings_test_notification_desc">Tlanya mona ho bona hore na litsebiso tsa hau tsa letsatsi la ho qetela li tla shebahala joang.</string>
+
+</resources>

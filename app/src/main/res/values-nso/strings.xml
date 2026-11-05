@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CampusSync</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_timetable">Lenaneo la nako</string>
+    <string name="title_budget">Tekanyetšo ya tšhelete</string>
+    <string name="title_assistant">Mothuši wa AI</string>
+    <string name="title_marks">Dintlha</string>
+    <string name="title_resources">Dithuša</string>
+    <string name="title_settings">Dipeakanyo</string>
+    <string name="action_logout">Tšwa</string>
+
+    <string name="login_welcome">O amogetšwe gape</string>
+    <string name="login_subtitle">Tsena go tšwela pele go CampusSync</string>
+    <string name="login_forgot_password">O lebetše phasewete?</string>
+    <string name="btn_login">Tsena</string>
+    <string name="login_or">GOBA</string>
+    <string name="btn_google">Tšwela pele ka Google</string>
+    <string name="login_no_account">Ga o na akhaonto? </string>
+
+    <string name="reg_personal_details">Dintlha tša motho</string>
+    <string name="hint_first_name">Leina la pele</string>
+    <string name="hint_surname">Sefane</string>
+    <string name="step_account">Akhaonto</string>
+    <string name="step_institution">Setheo</string>
+    <string name="step_review">Lekola</string>
+    <string name="btn_next">E latelago</string>
+    <string name="btn_register">Ngwadiša</string>
+    <string name="hint_email">Aterese ya imeile</string>
+    <string name="hint_password">Phasewete</string>
+    <string name="hint_confirm_password">Netefatša Phasewete</string>
+    <string name="hint_campus">Lefelo la khamphase</string>
+    <string name="hint_course">Khosi</string>
+    <string name="hint_year">Ngwaga wa dithuto</string>
+    <string name="hint_semester">Semester ya bjale</string>
+    <string name="is_rosebank_student">Na o moithuti wa Rosebank International?</string>
+    <string name="optimization_note">CampusSync e beakantšwe baithuti ba Rosebank International.</string>
+    <string name="manual_modules_note">O ka oketša dimodule ka morago sekrineng sa Lenaneo la nako.</string>
+    <string name="review_header">Lekola Dintlha tša Gago</string>
+    <string name="review_name_label">Leina: </string>
+    <string name="review_email_label">Imeile: </string>
+    <string name="review_campus_label">Khamphase: </string>
+    <string name="review_course_label">Khosi: </string>
+    <string name="review_year_label">Ngwaga: </string>
+    <string name="review_semester_label">Semester: </string>
+    <string name="review_modules_header">Dimodule tša gago tša Ngwaga %1$d, Semester %2$d:</string>
+    <string name="review_modules_note">Dimodule tše di tlo oketšwa lenaneong la gago la nako.</string>
+
+    <string name="dash_upcoming_class">Klase e e tlago</string>
+    <string name="dash_current_avg">Palogare ya bjale</string>
+    <string name="dash_budget_left">Tekanyetšo e šetšego</string>
+    <string name="dash_upcoming_deadlines">Matšatši a mafelelo a a tlago</string>
+    <string name="dash_no_deadlines">Ga go na matšatši a mafelelo a a tlago 🎉</string>
+    <string name="dash_ai_title">Mothuši wa AI</string>
+    <string name="dash_ai_desc">Tobetsa konope go hwetša keletšo ya go ithuta!</string>
+    <string name="dash_btn_tip">Hwetša keletšo</string>
+    <string name="dash_recent_assessments">Diteko tša morago bjale</string>
+
+    <string name="timetable_empty">Ga go na diklase tše di beakantšwego.\nTobetsa + go oketša e nngwe.</string>
+    <string name="desc_add_class">Oketša klase</string>
+
+    <string name="budget_monthly">Tekanyetšo ya kgwedi</string>
+    <string name="budget_btn_set">Bea kabo</string>
+    <string name="budget_empty">Ga go na ditshenyegelo kgweding ye.\nTobetsa + go oketša e nngwe.</string>
+    <string name="desc_add_expense">Oketša tshenyegelo</string>
+
+    <string name="marks_avg">Palogare ya kakaretšo</string>
+    <string name="marks_empty">Ga go na dintlha tše di rekotilwego.\nTobetsa + go oketša e nngwe.</string>
+    <string name="desc_add_mark">Oketša dintlha</string>
+
+    <string name="scan_timetable_title">Skena Lenaneo la nako</string>
+    <string name="choose_from_gallery">Kgetha go tšwa galaring</string>
+    <string name="scanning_message">E sekaseka lenaneo la gago la nako...</string>
+    <string name="scanning_upload_title">Laiša Seswantšho sa Lenaneo</string>
+    <string name="scanning_upload_desc">Re tlo ntšha dimodule, dinako le mafelo gore o di lekole.</string>
+    <string name="review_entries_title">Lekola Dikgetho</string>
+    <string name="review_entries_header">Go hweditšwe dikgetho tše %1$d. Thepha gore o di fetole pele o boloka.</string>
+    <string name="review_save_note">Ke fela dikgetho tše nang le khoutu ya module tše di tlo bolokwa.</string>
+    <string name="save_all">Boloka Ka Moka go Lenaneo</string>
+    <string name="rescan">Skena gape</string>
+    <string name="assessments_title">Diteko</string>
+    <string name="scan_pas">Skena PAS</string>
+    <string name="scanner_assessment_title">Skena Lenaneo la Diteko</string>
+    <string name="review_assessments_title">Lekola Diteko</string>
+    <string name="review_assessments_header">Go hweditšwe diteko tše %1$d. Thepha gore o di lekole.</string>
+    <string name="save_all_assessments">Boloka Diteko Ka Moka</string>
+    <string name="add_assessment_manually">Oketša Teko ka Seatla</string>
+    <string name="no_assessments">Ga go na diteko gona bjale. Skena PAS ya gago goba o oketše ka seatla.</string>
+    <string name="filter_all">Ka moka</string>
+    <string name="filter_upcoming">Tše di tlago</string>
+    <string name="filter_completed">Tše di fetilego</string>
+    <string name="filter_past">Nako ya go feta</string>
+    <string name="requires_turnitin">E nyaka Turnitin</string>
+    <string name="scanning_upload_title_pas">Laiša Seswantšho sa gago sa PAS</string>
+    <string name="scanning_upload_desc_pas">Re tlo ntšha matšatši a mafelelo a diteko.</string>
+    <string name="hint_module_code">Khoutu ya module</string>
+    <string name="hint_module_name">Leina la modula</string>
+    <string name="hint_day_of_week">Letšatši la beke</string>
+    <string name="hint_start_time">Nako ya go thoma</string>
+    <string name="hint_end_time">Nako ya go fela</string>
+    <string name="hint_venue">Lefelo</string>
+    <string name="desc_delete_entry">Phumula kgetho</string>
+
+    <string name="settings_profile_info">Tshedimošo ya profaele</string>
+    <string name="settings_first_name">Leina la pele</string>
+    <string name="settings_last_name">Sefane</string>
+    <string name="settings_institution">Setheo</string>
+    <string name="settings_course">Khosi</string>
+    <string name="settings_year">Ngwaga wa dithuto</string>
+    <string name="settings_btn_update">Hlohlelela profaele</string>
+    <string name="settings_academic_setup">Peakanyo ya dithuto</string>
+    <string name="settings_btn_manage_modules">Laola dimodule</string>
+    <string name="settings_preferences">Dikgetho</string>
+    <string name="settings_language">Polelo</string>
+    <string name="settings_enable_notifications">Dumela ditsebišo</string>
+    <string name="settings_security">Tšhireletšo</string>
+    <string name="settings_btn_change_password">Fetola phasewete</string>
+    <string name="settings_version">CampusSync v1.5.0</string>
+    <string name="settings_created_by">E dirilwe ke: Team CampusSync</string>
+
+    <string name="error_image_too_large">Seswantšho se segolo kudu. Kgetha se senyane.</string>
+    <string name="error_no_entries">Ga go na dikgetho tša lenaneo tše di hweditšwego. Leka seswantšho se se kwagalago.</string>
+    <string name="error_network">Lekola kgokagano ya gago ya inthanete.</string>
+    <string name="error_rate_limit">Dikgopelo di dintši kudu. Leta motsotso gomme o leke gape.</string>
+    <string name="error_auth">Netefatšo ya AI e paletše. Ikopanye le thekgo.</string>
+    <string name="error_generic">Ga se sa kgona go šoma seswantšho. Leka gape.</string>
+    <string name="entries_saved">Dikgetho tše %1$d di bolokilwe ka katlego</string>
+
+    <!-- Notification Preferences -->
+    <string name="settings_remind_days">Nkweletše pele ga letšatši la mafelelo</string>
+    <string name="remind_1_day">Letšatši la 1 pele</string>
+    <string name="remind_2_days">Matšatši a 2 pele</string>
+    <string name="remind_3_days">Matšatši a 3 pele</string>
+
+    <!-- Notification Testing -->
+    <string name="settings_notifications_title">Dipeakanyo tša Ditsebišo</string>
+    <string name="settings_test_notification">Romela Tsebišo ya Teko</string>
+    <string name="settings_test_notification_desc">Tobetsa mo go bona ka mo ditsebišo tša gago tša letšatši la mafelelo di tlo bonala ka gona.</string>
+
+</resources>

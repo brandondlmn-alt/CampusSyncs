@@ -88,11 +88,11 @@ class BudgetFragment : Fragment() {
                         binding.tvEmptyState.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
                     }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
             } catch (e: Exception) {
-                if (_binding != null) {
-                    binding.progressBar.visibility = View.GONE
-                    Log.e(TAG, "Error observing expenses", e)
-                    Toast.makeText(requireContext(), "Failed to load expenses.", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Error loading data", e)
+                if (isAdded && _binding != null) {
+                    Toast.makeText(requireContext(), "Failed to load data.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

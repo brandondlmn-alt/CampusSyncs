@@ -1,26 +1,34 @@
 package com.campussync.app.activities
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Filter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.lifecycleScope
-import com.campussync.app.R
 import com.campussync.app.data.AuthRepository
 import com.campussync.app.databinding.ActivitySettingsBinding
 import com.campussync.app.databinding.DialogChangePasswordBinding
 import com.campussync.app.models.User
+import com.campussync.app.utils.NotificationHelper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 /**
  * Settings Activity for user profile management, preferences, and security.
- * Allows users to update their profile information, change their password, and toggle preferences.
  */
 class SettingsActivity : AppCompatActivity() {
 
@@ -29,6 +37,24 @@ class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
     private var currentUser: User? = null
 
+    private val languages = listOf(
+        Pair("System Default", ""),
+        Pair("English", "en"),
+        Pair("Afrikaans", "af"),
+        Pair("isiZulu", "zu"),
+        Pair("isiXhosa", "xh"),
+        Pair("isiNdebele", "nr"),
+        Pair("Sepedi", "nso"),
+        Pair("Sesotho", "st"),
+        Pair("Setswana", "tn"),
+        Pair("siSwati", "ss"),
+        Pair("Tshivenda", "ve"),
+        Pair("Xitsonga", "ts")
+    )
+
+    private val reminderOptions = listOf("1 Day Before", "2 Days Before", "3 Days Before")
+    private var selectedReminderDays = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -36,37 +62,95 @@ class SettingsActivity : AppCompatActivity() {
 
         setupToolbar()
         setupLanguageDropdown()
+        setupReminderDropdown()
         loadUserProfile()
 
-        binding.btnUpdateProfile.setOnClickListener {
-            updateProfile()
+        binding.btnUpdateProfile.setOnClickListener { updateProfile() }
+        binding.btnManageModules.setOnClickListener { startActivity(Intent(this, ModulesActivity::class.java)) }
+        binding.btnChangePassword.setOnClickListener { showChangePasswordDialog() }
+        binding.btnLogout.setOnClickListener { performLogout() }
+
+        // NEW: Test Notification Button
+        binding.btnTestNotification.setOnClickListener {
+            if (currentUser?.notificationsEnabled == true) {
+                NotificationHelper.showDeadlineNotification(
+                    this,
+                    "Test Notification 🔔",
+                    "This is how your deadline alerts will look! You chose to be reminded $selectedReminderDays day(s) before."
+                )
+                Toast.makeText(this, "Test notification sent!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please enable notifications first.", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        binding.btnManageModules.setOnClickListener {
-            startActivity(Intent(this, ModulesActivity::class.java))
-        }
-
-        binding.btnChangePassword.setOnClickListener {
-            showChangePasswordDialog()
-        }
-
-        binding.btnLogout.setOnClickListener {
-            performLogout()
-        }
+        // Check if the user has blocked notifications at the system level
+        checkNotificationPermission()
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
     private fun setupLanguageDropdown() {
-        val languages = arrayOf("English", "isiZulu", "Afrikaans", "Sesotho", "isiXhosa")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, languages)
+        val languageNames = languages.map { it.first }
+        val adapter = NoFilterArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, languageNames)
         binding.actvLanguage.setAdapter(adapter)
+
+        val currentLocale = AppCompatDelegate.getApplicationLocales()
+        val currentLocaleCode = if (currentLocale.isEmpty) "" else currentLocale[0]?.language
+
+        val currentLangName = languages.find { it.second == currentLocaleCode }?.first ?: "System Default"
+        binding.actvLanguage.setText(currentLangName, false)
+
+        binding.actvLanguage.setOnItemClickListener { _, _, position, _ ->
+            val selectedLanguageCode = languages[position].second
+            setAppLanguage(selectedLanguageCode)
+        }
+    }
+
+    private fun setupReminderDropdown() {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, reminderOptions)
+        binding.actvReminderDays.setAdapter(adapter)
+        binding.actvReminderDays.setText(reminderOptions[0], false)
+
+        binding.actvReminderDays.setOnItemClickListener { _, _, position, _ ->
+            selectedReminderDays = position + 1
+        }
+    }
+
+    private fun setAppLanguage(languageCode: String) {
+        Toast.makeText(this, "Changing language...", Toast.LENGTH_SHORT).show()
+
+        val appLocale: LocaleListCompat = if (languageCode.isEmpty()) {
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(languageCode)
+        }
+
+        AppCompatDelegate.setApplicationLocales(appLocale)
+    }
+
+    /**
+     * Checks if the user has blocked notifications at the system level.
+     */
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder(this)
+                    .setTitle("Notifications Disabled")
+                    .setMessage("To receive deadline alerts, you need to enable notifications in your phone's settings.")
+                    .setPositiveButton("Open Settings") { _, _ ->
+                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        }
     }
 
     private fun loadUserProfile() {
@@ -81,7 +165,6 @@ class SettingsActivity : AppCompatActivity() {
                 },
                 onFailure = { e ->
                     Log.e(TAG, "Failed to load profile", e)
-                    Toast.makeText(this@SettingsActivity, "Error loading profile", Toast.LENGTH_SHORT).show()
                 }
             )
         }
@@ -93,8 +176,16 @@ class SettingsActivity : AppCompatActivity() {
         binding.etInstitution.setText(user.campusLocation)
         binding.etCourse.setText(user.course)
         binding.etYear.setText(user.yearOfStudy.toString())
-        binding.actvLanguage.setText(user.language, false)
         binding.switchNotifications.isChecked = user.notificationsEnabled
+
+        selectedReminderDays = user.notificationDaysBefore
+        val displayString = when (selectedReminderDays) {
+            1 -> reminderOptions[0]
+            2 -> reminderOptions[1]
+            3 -> reminderOptions[2]
+            else -> reminderOptions[0]
+        }
+        binding.actvReminderDays.setText(displayString, false)
     }
 
     private fun updateProfile() {
@@ -103,7 +194,10 @@ class SettingsActivity : AppCompatActivity() {
         val institution = binding.etInstitution.text.toString().trim()
         val course = binding.etCourse.text.toString().trim()
         val year = binding.etYear.text.toString().trim()
-        val language = binding.actvLanguage.text.toString()
+
+        val currentLocale = AppCompatDelegate.getApplicationLocales()
+        val currentLocaleCode = if (currentLocale.isEmpty) "en" else currentLocale[0]?.language ?: "en"
+
         val notificationsEnabled = binding.switchNotifications.isChecked
 
         if (firstName.isEmpty() || lastName.isEmpty()) {
@@ -118,8 +212,9 @@ class SettingsActivity : AppCompatActivity() {
             campusLocation = institution,
             course = course,
             yearOfStudy = year.toIntOrNull() ?: 0,
-            language = language,
+            language = currentLocaleCode,
             notificationsEnabled = notificationsEnabled,
+            notificationDaysBefore = selectedReminderDays,
             updatedAt = System.currentTimeMillis()
         ) ?: return
 
@@ -202,5 +297,25 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnManageModules.isEnabled = !isLoading
         binding.btnChangePassword.isEnabled = !isLoading
         binding.btnLogout.isEnabled = !isLoading
+        binding.btnTestNotification.isEnabled = !isLoading
+    }
+}
+
+class NoFilterArrayAdapter(context: Context, resource: Int, private val items: List<String>) :
+    ArrayAdapter<String>(context, resource, items) {
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+                results.values = items
+                results.count = items.size
+                return results
+            }
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                if (results != null && results.count > 0) {
+                    notifyDataSetChanged()
+                }
+            }
+        }
     }
 }

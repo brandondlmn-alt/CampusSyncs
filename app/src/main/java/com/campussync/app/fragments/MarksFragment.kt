@@ -20,14 +20,12 @@ import com.campussync.app.models.MarkEntry
 import com.campussync.app.models.MarkListItem
 import com.campussync.app.models.Module
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-/**
- * Fragment for tracking academic marks and calculating weighted averages.
- */
 class MarksFragment : Fragment() {
 
     private var _binding: FragmentMarksBinding? = null
@@ -67,7 +65,8 @@ class MarksFragment : Fragment() {
 
     private fun observeData() {
         binding.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
+        // FIXED: Changed to viewLifecycleOwner.lifecycleScope
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 combine(
                     repository.getMarkEntries(),
@@ -106,9 +105,11 @@ class MarksFragment : Fragment() {
                         binding.tvEmptyState.visibility = if (listItems.isEmpty()) View.VISIBLE else View.GONE
                     }
                 }
+            } catch (e: CancellationException) {
+                // FIXED: Ignore cancellation
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load marks", e)
-                if (_binding != null) {
+                if (isAdded && _binding != null) {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "Failed to load marks. Please try again.", Toast.LENGTH_SHORT).show()
                 }
@@ -117,7 +118,7 @@ class MarksFragment : Fragment() {
     }
 
     private fun checkModulesAndShowDialog(mark: MarkEntry?) {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val modules = moduleRepository.getModules().first()
                 if (modules.isEmpty()) {
@@ -125,6 +126,8 @@ class MarksFragment : Fragment() {
                 } else {
                     showAddEditDialog(mark, modules)
                 }
+            } catch (e: CancellationException) {
+                // Ignore
             } catch (e: Exception) {
                 Log.e(TAG, "Error checking modules", e)
             }
@@ -177,7 +180,7 @@ class MarksFragment : Fragment() {
                     weight = weightVal
                 )
 
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     val result = if (isEdit) repository.updateMark(newMark) else repository.addMark(newMark)
                     result.fold(
                         onSuccess = {
@@ -200,7 +203,7 @@ class MarksFragment : Fragment() {
             .setTitle("Delete Mark")
             .setMessage("Remove this mark for ${mark.moduleCode}?")
             .setPositiveButton("Delete") { _, _ ->
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     repository.deleteMark(mark.id).fold(
                         onSuccess = { Snackbar.make(binding.root, "Mark removed", Snackbar.LENGTH_SHORT).show() },
                         onFailure = { Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show() }

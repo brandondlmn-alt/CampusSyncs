@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:text="Personal Details"
+                    android:text="@string/reg_personal_details"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                     android:textColor="@color/primary_blue"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="First Name"
+                            android:hint="@string/hint_first_name"
                             app:boxCornerRadiusBottomEnd="20dp"
                             app:boxCornerRadiusBottomStart="20dp"
                             app:boxCornerRadiusTopEnd="20dp"
@@ -91,7 +91,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:hint="Surname"
+                            android:hint="@string/hint_surname"
                             app:boxCornerRadiusBottomEnd="20dp"
                             app:boxCornerRadiusBottomStart="20dp"
                             app:boxCornerRadiusTopEnd="20dp"
@@ -171,7 +171,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:layout_marginTop="32dp"
-                    android:text="Next"
+                    android:text="@string/btn_next"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
@@ -327,7 +327,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:layout_marginTop="32dp"
-                    android:text="Next"
+                    android:text="@string/btn_next"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
@@ -372,7 +372,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:text="Name: "
+                            android:text="@string/review_name_label"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="@color/primary_blue"
                             android:textStyle="bold" />
@@ -382,34 +382,34 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="Email: " />
+                            android:text="@string/review_email_label" />
 
                         <TextView
                             android:id="@+id/tvReviewCampus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="Campus: " />
+                            android:text="@string/review_campus_label" />
 
                         <TextView
                             android:id="@+id/tvReviewCourse"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="Course: " />
+                            android:text="@string/review_course_label" />
 
                         <TextView
                             android:id="@+id/tvReviewYear"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="Year: " />
+                            android:text="@string/review_year_label" />
 
                         <TextView
                             android:id="@+id/tvReviewSemester"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Semester: " />
+                            android:text="@string/review_semester_label" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -444,7 +444,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:layout_marginTop="32dp"
-                    android:text="Register"
+                    android:text="@string/btn_register"
                     android:textSize="16sp" />
 
             </LinearLayout>
